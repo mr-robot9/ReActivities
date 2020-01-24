@@ -17,7 +17,7 @@ namespace API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup (IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -25,34 +25,45 @@ namespace API
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices (IServiceCollection services)
         {
 
-            services.AddDbContext<DataContext>(options => 
+            services.AddDbContext<DataContext> (options =>
             {
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlite (Configuration.GetConnectionString ("DefaultConnection"));
             });
 
-            services.AddControllers();
+            services.AddCors (options =>
+            {
+                //allows any requests from localhost;3000 to get into app
+                options.AddPolicy ("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader ().AllowAnyMethod ().WithOrigins ("http://localhost:3000");
+                });
+            });
+
+            services.AddControllers ();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure (IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment ())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage ();
             }
 
             /* app.UseHttpsRedirection(); */
 
-            app.UseRouting();
+            app.UseCors("CorsPolicy");
 
-            app.UseAuthorization();
+            app.UseRouting ();
 
-            app.UseEndpoints(endpoints =>
+            app.UseAuthorization ();
+
+            app.UseEndpoints (endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers ();
             });
         }
     }
