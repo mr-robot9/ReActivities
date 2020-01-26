@@ -13,6 +13,7 @@ namespace Persistence
 
         //entities aka tables
         public DbSet<Value> Values { get; set; }
+        public DbSet<Activity> Activities { get; set; }
 
         //seeding
         protected override void OnModelCreating(ModelBuilder builder)

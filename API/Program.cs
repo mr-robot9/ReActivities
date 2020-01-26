@@ -24,11 +24,12 @@ namespace API
             {
                 var services = scope.ServiceProvider;
                 
-                //anytime we start app, create a db if it doesn't exist
+                //anytime we start app, create a db if it doesn't exist, and apply any pending migrations
                 try
                 {
                     var context = services.GetRequiredService<DataContext>();                        
                     context.Database.Migrate();
+                    Seed.SeedData(context);
                 }
                 catch(Exception ex)
                 {
