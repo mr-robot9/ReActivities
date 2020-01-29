@@ -12,6 +12,30 @@ import { ActivityDashboard } from "../../features/activities/dashboard/ActivityD
 const App = () => {
 
   const [activities, setActivities] = useState<IActivity[]>([]);
+  const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(null);
+
+  const [editCreateMode, setEditCreateMode] = useState(false);
+
+  const handleEditCreateToggle = () => {
+      let newEditCreateMode : boolean = !editCreateMode;
+      
+      setEditCreateMode(newEditCreateMode);
+  } 
+
+  const handleSelectActivity = (id :string | null) => {
+    if (id == null) {
+      setSelectedActivity(null)
+    }
+    else{
+      setSelectedActivity(activities.filter(a => a.id === id)[0]);
+    }
+  }
+
+  const handleOpenCreateForm = () =>
+  {
+    setSelectedActivity(null);
+    setEditCreateMode(true);
+  }
 
   //second param ([]) is set empty bc we're telling react to not run this method again
   //we're using it doesn't depend on any values from props or state so no re-run
@@ -25,9 +49,15 @@ const App = () => {
 
   return (
     <Fragment>
-      <NavBar />
+      <NavBar handleOpenCreateForm = {handleOpenCreateForm}/>
       <Container style={{ marginTop: '7em' }}>
-        <ActivityDashboard activities={activities} />
+        <ActivityDashboard 
+          activities={activities} 
+          handleSelectActivity = {handleSelectActivity} 
+          selectedActivity = {selectedActivity}
+          handleEditCreateToggle = {handleEditCreateToggle} 
+          IsEditCreateMode = {editCreateMode}
+          />
       </Container>
     </Fragment>
   );

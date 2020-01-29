@@ -1,16 +1,52 @@
-import React from 'react'
-import { Segment, Form } from 'semantic-ui-react'
+import React, { useState, useEffect, FormEvent } from 'react'
+import { Segment, Form, Button } from 'semantic-ui-react'
+import { IActivity } from '../../../app/models/activity'
 
-export const ActivityForm = () => {
+interface IProps {
+    handleEditCreateToggle: () => void;
+    selectedActivity: IActivity;
+    handleSelectActivity: (id: string | null) => void;
+
+}
+
+/*
+This component handles the edit view of a single selected Activity
+OR a newly created Activity form 
+*/
+
+
+export const ActivityForm: React.FC<IProps> = ({ handleEditCreateToggle, selectedActivity }) => {
+
+    //on load, set the form activity to be the one selected
+    //on edit, change to the activity state which is only available in this component
+    const [activity, setActivity] = useState<IActivity>(selectedActivity);
+
+    const handleSubmit = () => {
+        console.log(activity);
+    }
+
+    const handleInputChange = (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        //set activity properties
+        const name = event.currentTarget.name;
+        const value = event.currentTarget.value;
+
+        setActivity({ ...activity, [name]: value })
+        // console.log(event.target.placeholder);
+
+    }
+
     return (
-        <Segment>
-            <Form>
-                <Form.Input placeholder="Title" />
-                <Form.TextArea rows={2} placeholder="Description" />
-                <Form.Input placeholder="Category" />
-                <Form.Input type='date' placeholder="Date" />
-                <Form.Input placeholder="City" />
-                <Form.Input placeholder="Venue" />
+        <Segment clearing>
+            <Form onSubmit = {handleSubmit}>
+                <Form.Input onChange={handleInputChange} name="title" placeholder="Title" value={activity?.title ?? ''} />
+                <Form.TextArea onChange={handleInputChange} name="description" rows={2} placeholder="Description" value={activity?.description ?? ''} />
+                <Form.Input onChange={handleInputChange} name="category" placeholder="Category" value={activity?.category ?? ''} />
+                <Form.Input onChange={handleInputChange} name="date" type='date' placeholder="Date" value={activity?.date ?? ''} />
+                <Form.Input onChange={handleInputChange} name="city" placeholder="City" value={activity?.city ?? ''} />
+                <Form.Input onChange={handleInputChange} name="venue" placeholder="Venue" value={activity?.venue ?? ''} />
+                <Button floated='right' positive type='submit' content='Save'/>
+                <Button onClick={handleEditCreateToggle} floated='right' content='Cancel' />
+
             </Form>
         </Segment>
     )

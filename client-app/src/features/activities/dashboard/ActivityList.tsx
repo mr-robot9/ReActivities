@@ -3,10 +3,12 @@ import { Item, Button, Label, Segment } from 'semantic-ui-react'
 import { IActivity } from '../../../app/models/activity'
 
 interface IProps {
-    activities: IActivity[]
+    activities: IActivity[];
+    handleSelectActivity: (id: string) => void;
+
 }
 
-export const ActivityList: React.FC<IProps> = ({ activities }) => {
+export const ActivityList: React.FC<IProps> = ({ activities, handleSelectActivity }) => {
     return (
         <Segment clearing>
             <Item.Group divided>
@@ -21,7 +23,11 @@ export const ActivityList: React.FC<IProps> = ({ activities }) => {
 
                             </Item.Description>
                             <Item.Extra>
-                                <Button floated='right' content='View' color='blue' />
+                                <Button onClick={() => {
+                                    console.log("hello" + activity.id);
+                                    handleSelectActivity(activity.id)
+                                }}
+                                    floated='right' content='View' color='blue' />
                                 <Label basic content={activity.category} />
                             </Item.Extra>
                         </Item.Content>
