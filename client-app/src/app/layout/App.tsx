@@ -1,8 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
-import logo from "./logo.svg";
 import axios from "axios";
-import { Header, Icon, Container } from "semantic-ui-react";
-import { List } from 'semantic-ui-react';
+import { Container } from "semantic-ui-react";
 import { IActivity } from '../models/activity'
 import { NavBar } from "../../features/nav/NavBar";
 import { ActivityDashboard } from "../../features/activities/dashboard/ActivityDashboard";
@@ -29,6 +27,31 @@ const App = () => {
     else{
       setSelectedActivity(activities.filter(a => a.id === id)[0]);
     }
+    setEditCreateMode(false);
+  }
+
+  const handleCreateActivity = (newActivity: IActivity) =>
+  {
+    //add a new activity along with existing activities
+    setActivities([...activities, newActivity])
+    setSelectedActivity(newActivity);
+    setEditCreateMode(false);
+  }
+
+  const handleEditActivity = (activityToEdit: IActivity) =>
+  {
+    //update specific activity, so re-set activities with set w/o activity we're editing
+    //then add that newly edited activity
+    setActivities([...activities.filter( a => a.id !== activityToEdit.id), activityToEdit])
+    setSelectedActivity(activityToEdit);
+    setEditCreateMode(false);
+
+  }
+
+  const handleDeleteActivity = (activityId: string) =>
+  {
+    setActivities([...activities.filter(a => a.id !== activityId)]);
+
   }
 
   const handleOpenCreateForm = () =>
@@ -43,7 +66,17 @@ const App = () => {
     axios
       .get<IActivity[]>("http://localhost:5000/api/activities")
       .then(response => {
-        setActivities(response.data);
+        let activities: IActivity[] = [];
+
+
+        //splitting in order show in form
+        response.data.forEach(a => 
+          {
+            a.date = a.date.split('.')[0];
+
+            activities.push(a);
+          });
+        setActivities(activities);
       });
   }, []);
 
@@ -57,6 +90,9 @@ const App = () => {
           selectedActivity = {selectedActivity}
           handleEditCreateToggle = {handleEditCreateToggle} 
           IsEditCreateMode = {editCreateMode}
+          handleCreateActivity = {handleCreateActivity}
+          handleEditActivity = {handleEditActivity}
+          handleDeleteActivity = {handleDeleteActivity}
           />
       </Container>
     </Fragment>
