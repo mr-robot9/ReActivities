@@ -1,100 +1,24 @@
-import React, { useState, useEffect, Fragment, SyntheticEvent } from "react";
+import React, { useEffect, Fragment, useContext } from "react";
 import { Container } from "semantic-ui-react";
-import { IActivity } from "../models/activity";
-import { NavBar } from "../../features/nav/NavBar";
-import { ActivityDashboard } from "../../features/activities/dashboard/ActivityDashboard";
-import ActivityService from "../api/agent";
+import  NavBar from "../../features/nav/NavBar";
+import  ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 import LoadingComponent from "./LoadingComponent";
+import ActivityStore from "../stores/activityStore";
+import {observer} from "mobx-react-lite";
 
 const App = () => {
-  const [activities, setActivities] = useState<IActivity[]>([]);
-  const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(
-    null
-  );
+  const activityStore = useContext(ActivityStore)
 
-  const [editCreateMode, setEditCreateMode] = useState(false);
-
-  const [IsLoading, setLoading] = useState(true);
-  const [IsSubmitting, setSubmitting] = useState(false);
-  const [target, setTarget] = useState("");
-
-  const handleEditCreateToggle = () => {
-    let newEditCreateMode: boolean = !editCreateMode;
-
-    setEditCreateMode(newEditCreateMode);
-  };
-
-  const handleSelectActivity = (id: string | null) => {
-    if (id == null) {
-      setSelectedActivity(null);
-    } else {
-      setSelectedActivity(activities.filter(a => a.id === id)[0]);
-    }
-    setEditCreateMode(false);
-  };
-
-  const handleCreateActivity = (newActivity: IActivity) => {
-    setSubmitting(true);
-
-    //add a new activity along with existing activities
-    //create new activity on server, wait, THEN, do something with promise
-    ActivityService.create(newActivity).then(response => {
-      setActivities([...activities, newActivity]);
-      setSelectedActivity(newActivity);
-      setEditCreateMode(false);
-    }).then(() => setSubmitting(false));
-  };
-
-  const handleEditActivity = (activityToEdit: IActivity) => {
-    setSubmitting(true);
-
-    ActivityService.update(activityToEdit).then(() => {
-      //update specific activity, so re-set activities with set w/o activity we're editing
-      //then add that newly edited activity
-      setActivities([
-        ...activities.filter(a => a.id !== activityToEdit.id),
-        activityToEdit
-      ]);
-      setSelectedActivity(activityToEdit);
-      setEditCreateMode(false);
-    }).then(() => setSubmitting(false));
-  };
-
-  const handleDeleteActivity = (event: SyntheticEvent<HTMLButtonElement>, activityId: string) => {
-    setSubmitting(true);
-    setTarget(event.currentTarget.name);
-
-    ActivityService.delete(activityId).then(() => 
-    {
-      setActivities([...activities.filter(a => a.id !== activityId)]);
-    }).then(() => setSubmitting(false));
-  };
-
-  const handleOpenCreateForm = () => {
-    setSelectedActivity(null);
-    setEditCreateMode(true);
-  };
 
   //second param ([]) is set empty bc we're telling react to not run this method again
   //we're using it doesn't depend on any values from props or state so no re-run
   useEffect(() => {
     console.log("getting list");
-    ActivityService.list().then(response => {
-      let activities: IActivity[] = [];
+    activityStore.loadActivities();
+  }, [activityStore]);
 
-      //splitting in order show in form
-      response.forEach(a => {
-        a.date = a.date.split(".")[0];
-
-        activities.push(a);
-      });
-      setActivities(activities);
-    }).then(() => {
-      setLoading(false)
-    });
-  }, []);
-
-  if (IsLoading) {
+  //gets called before useEffect
+  if (activityStore.IsLoading) {
     console.log("loading");
     return <LoadingComponent content = "Loading Activities"   />
   }
@@ -102,23 +26,13 @@ const App = () => {
   console.log("returning page...");
   return (
     <Fragment>
-      <NavBar handleOpenCreateForm={handleOpenCreateForm} />
+      <NavBar />
       <Container style={{ marginTop: "7em" }}>
-        <ActivityDashboard
-          activities={activities}
-          handleSelectActivity={handleSelectActivity}
-          selectedActivity={selectedActivity}
-          handleEditCreateToggle={handleEditCreateToggle}
-          IsEditCreateMode={editCreateMode}
-          handleCreateActivity={handleCreateActivity}
-          handleEditActivity={handleEditActivity}
-          handleDeleteActivity={handleDeleteActivity}
-          IsSubmitting = {IsSubmitting}
-          target = {target}
-        />
+        <ActivityDashboard />
       </Container>
     </Fragment>
   );
 };
 
-export default App;
+//observer is a higher order component (a component that takes a comp and returns another comp w/ abilities)
+export default observer(App);

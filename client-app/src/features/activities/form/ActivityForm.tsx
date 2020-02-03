@@ -1,18 +1,11 @@
-import React, { useState, FormEvent } from 'react'
+import React, { useState, FormEvent, useContext } from 'react'
 import { Segment, Form, Button } from 'semantic-ui-react'
 import { IActivity } from '../../../app/models/activity'
 import {v4 as uuid} from 'uuid';
 import { isNullOrUndefined } from 'util';
+import ActivityStore from '../../../app/stores/activityStore'
+import { observer } from 'mobx-react-lite';
 
-interface IProps {
-    handleEditCreateToggle: () => void;
-    selectedActivity: IActivity;
-    handleSelectActivity: (id: string | null) => void;
-    handleCreateActivity: (activity: IActivity) => void;
-    handleEditActivity: (activity: IActivity) => void;
-    IsSubmitting: boolean;
-
-}
 
 /*
 This component handles the edit view of a single selected Activity
@@ -20,33 +13,28 @@ OR a newly created Activity form
 */
 
 
-export const ActivityForm: React.FC<IProps> = ({ 
-    handleEditCreateToggle, 
-    selectedActivity,
-    handleCreateActivity,
-    handleEditActivity,
-    IsSubmitting
-}) => {
+const ActivityForm: React.FC = () => {
+
+    const activityStore = useContext(ActivityStore)
+    const {createActivity, editActivity, IsSubmitting, cancelFormOpen, selectedActivity} = activityStore;
+
 
     //on load, set the form activity to be the one selected
     //on edit, change to the activity state which is only available in this component
-    const [activity, setActivity] = useState<IActivity>(selectedActivity);
+    const [activity, setActivity] = useState<IActivity>(selectedActivity!);
 
     const handleSubmit = () => {
 
         if (isNullOrUndefined(activity.id))
         {
             let newActivity = {...activity, id: uuid()}
-            handleCreateActivity(newActivity);
+            createActivity(newActivity);
         }
         else
         {
-            handleEditActivity(activity);
+            editActivity(activity);
         }
 
-        
-
-        console.log(activity);
     }
 
     const handleInputChange = (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -69,9 +57,14 @@ export const ActivityForm: React.FC<IProps> = ({
                 <Form.Input onChange={handleInputChange} name="city" placeholder="City" value={activity?.city ?? ''} />
                 <Form.Input onChange={handleInputChange} name="venue" placeholder="Venue" value={activity?.venue ?? ''} />
                 <Button loading={IsSubmitting} floated='right' positive type='submit' content='Save'/>
-                <Button onClick={handleEditCreateToggle} floated='right' content='Cancel' />
+                <Button onClick={cancelFormOpen} floated='right' content='Cancel' />
 
             </Form>
         </Segment>
     )
 }
+
+
+export default observer(ActivityForm);
+
+

@@ -37,7 +37,9 @@ namespace Application.Activities
                 activityToEdit.Date = request.Activity.Date ?? activityToEdit.Date;
                 activityToEdit.City = request.Activity.City ?? activityToEdit.City;
                 activityToEdit.Venue = request.Activity.Venue ?? activityToEdit.Venue;
-
+                
+                //if it never had any changes, just return
+                if (!_context.ChangeTracker.HasChanges()) return Unit.Value;
 
                 var IsSuccessful = await _context.SaveChangesAsync () > 0;
 
