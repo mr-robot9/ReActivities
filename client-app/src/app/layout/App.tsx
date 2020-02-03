@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, SyntheticEvent } from "react";
 import { Container } from "semantic-ui-react";
 import { IActivity } from "../models/activity";
 import { NavBar } from "../../features/nav/NavBar";
@@ -16,6 +16,7 @@ const App = () => {
 
   const [IsLoading, setLoading] = useState(true);
   const [IsSubmitting, setSubmitting] = useState(false);
+  const [target, setTarget] = useState("");
 
   const handleEditCreateToggle = () => {
     let newEditCreateMode: boolean = !editCreateMode;
@@ -59,8 +60,9 @@ const App = () => {
     }).then(() => setSubmitting(false));
   };
 
-  const handleDeleteActivity = (activityId: string) => {
+  const handleDeleteActivity = (event: SyntheticEvent<HTMLButtonElement>, activityId: string) => {
     setSubmitting(true);
+    setTarget(event.currentTarget.name);
 
     ActivityService.delete(activityId).then(() => 
     {
@@ -112,6 +114,7 @@ const App = () => {
           handleEditActivity={handleEditActivity}
           handleDeleteActivity={handleDeleteActivity}
           IsSubmitting = {IsSubmitting}
+          target = {target}
         />
       </Container>
     </Fragment>

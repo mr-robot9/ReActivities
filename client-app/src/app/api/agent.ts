@@ -8,10 +8,11 @@ axios.defaults.baseURL = "http://localhost:5000/api";
 const responseBody = (response: AxiosResponse) => response.data;
 
 const sleep = (ms: number) => 
-    {
+{
     return (response: AxiosResponse) =>
-    new Promise<AxiosResponse>(resolve => setTimeout(() => resolve(response), ms));
-    }
+        new Promise<AxiosResponse>(resolve => setTimeout(() => resolve(response), ms));
+}
+
 
 const requests = {
     get: (url: string) => axios.get(url).then(sleep(1000)).then(responseBody),
@@ -21,7 +22,7 @@ const requests = {
 }
 
 
-const ActivityService ={
+const ActivityService = {
     list: (): Promise<IActivity[]> => requests.get('/activities'),
     details: (id: string) => requests.get(`/activities/${id}`),
     create: (activity: IActivity) => requests.post('/activities', new Activity(activity)),
