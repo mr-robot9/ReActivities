@@ -15,6 +15,7 @@ interface IProps {
     handleCreateActivity: (activity: IActivity) => void;
     handleEditActivity: (activity: IActivity) => void;
     handleDeleteActivity: (id: string) => void;
+    IsSubmitting: boolean;
 
 }
 
@@ -33,18 +34,20 @@ export const ActivityDashboard: React.FC<IProps> = ({
     IsEditCreateMode,
     handleCreateActivity,
     handleEditActivity,
-    handleDeleteActivity
+    handleDeleteActivity,
+    IsSubmitting
 }) => {
     return (
         <Grid>
             <Grid.Column width={10}>
-                <ActivityList activities={activities} handleSelectActivity={handleSelectActivity} handleDeleteActivity = {handleDeleteActivity}/>
+                <ActivityList activities={activities} handleSelectActivity={handleSelectActivity} handleDeleteActivity = {handleDeleteActivity} IsSubmitting={IsSubmitting}/>
             </Grid.Column>
             <Grid.Column width={6}>
                 {selectedActivity && <ActivityDetails selectedActivity={selectedActivity} handleSelectActivity = {handleSelectActivity} handleEditCreateToggle = {handleEditCreateToggle}/>}
                 {IsEditCreateMode && 
                     <ActivityForm 
                         key = {selectedActivity && selectedActivity.id || 0}
+                        IsSubmitting={IsSubmitting}
                         handleEditCreateToggle = {handleEditCreateToggle} 
                         selectedActivity = {selectedActivity!} 
                         handleSelectActivity = {handleSelectActivity} 

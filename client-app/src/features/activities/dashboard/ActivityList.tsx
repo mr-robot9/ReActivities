@@ -6,9 +6,10 @@ interface IProps {
     activities: IActivity[];
     handleSelectActivity: (id: string) => void;
     handleDeleteActivity: (id: string) => void;
+    IsSubmitting: boolean;
 }
 
-export const ActivityList: React.FC<IProps> = ({ activities, handleSelectActivity, handleDeleteActivity }) => {
+export const ActivityList: React.FC<IProps> = ({ activities, handleSelectActivity, handleDeleteActivity, IsSubmitting }) => {
     return (
         <Segment clearing>
             <Item.Group divided>
@@ -29,7 +30,7 @@ export const ActivityList: React.FC<IProps> = ({ activities, handleSelectActivit
                                     handleSelectActivity(activity.id)
                                 }}
                                     floated='right' content='View' color='blue' />
-                                <Button onClick={() => {
+                                <Button loading={IsSubmitting} onClick={() => {
                                     console.log("hello" + activity.id);
                                     handleDeleteActivity(activity.id)
                                 }}

@@ -10,6 +10,7 @@ interface IProps {
     handleSelectActivity: (id: string | null) => void;
     handleCreateActivity: (activity: IActivity) => void;
     handleEditActivity: (activity: IActivity) => void;
+    IsSubmitting: boolean;
 
 }
 
@@ -23,7 +24,8 @@ export const ActivityForm: React.FC<IProps> = ({
     handleEditCreateToggle, 
     selectedActivity,
     handleCreateActivity,
-    handleEditActivity
+    handleEditActivity,
+    IsSubmitting
 }) => {
 
     //on load, set the form activity to be the one selected
@@ -66,7 +68,7 @@ export const ActivityForm: React.FC<IProps> = ({
                 <Form.Input onChange={handleInputChange} name="date" type='datetime-local' placeholder="Date" value={activity?.date ?? ''} />
                 <Form.Input onChange={handleInputChange} name="city" placeholder="City" value={activity?.city ?? ''} />
                 <Form.Input onChange={handleInputChange} name="venue" placeholder="Venue" value={activity?.venue ?? ''} />
-                <Button floated='right' positive type='submit' content='Save'/>
+                <Button loading={IsSubmitting} floated='right' positive type='submit' content='Save'/>
                 <Button onClick={handleEditCreateToggle} floated='right' content='Cancel' />
 
             </Form>
