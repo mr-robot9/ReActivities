@@ -15,7 +15,7 @@ class ActivityStore {
     @observable IsSubmitting = false;
     @observable target = '';
 
-    @computed get activitiesByDate() {
+    @computed get activitiesByDate(): IActivity[] {
         return Array.from(this.activityRegistry.values()).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
     }
 
@@ -137,6 +137,10 @@ class ActivityStore {
                 this.IsLoading = false;
             });
         }
+    }
+
+    @action loadActivity = async (id: String) => {
+        
     }
 }
 
