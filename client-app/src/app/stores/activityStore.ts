@@ -11,7 +11,6 @@ class ActivityStore {
     @observable activities: IActivity[] = [];
     @observable selectedActivity: IActivity | undefined;
     @observable IsLoading = false;
-    @observable IsEditCreateMode = false;
     @observable IsSubmitting = false;
     @observable target = '';
 
@@ -21,16 +20,7 @@ class ActivityStore {
 
     @action selectActivity = (id: string | null) => {
         this.selectedActivity = isNullOrUndefined(id) ? undefined : this.activityRegistry.get(id);
-        this.IsEditCreateMode = false;
-    }
-
-    @action openEditForm = (id: string) => {
-        this.IsEditCreateMode = true;
-        this.selectedActivity = this.activityRegistry.get(id);
-    }
-
-    @action cancelFormOpen = () => {
-        this.IsEditCreateMode = false;
+        console.log("activity is " + this.selectedActivity);
     }
 
     @action editActivity = async (activityToEdit: IActivity) => {
@@ -42,7 +32,6 @@ class ActivityStore {
             runInAction('Edit Activity', () => {
                 this.activityRegistry.set(activityToEdit.id, activityToEdit);
                 this.selectedActivity = activityToEdit;
-                this.IsEditCreateMode = false;
             });
 
         }
@@ -92,7 +81,6 @@ class ActivityStore {
             runInAction('Creating Activity', () => {
                 this.activityRegistry.set(newActivity.id, newActivity);
                 this.selectedActivity = newActivity;
-                this.IsEditCreateMode = false;
             });
 
         }
@@ -105,12 +93,6 @@ class ActivityStore {
             });
         }
     }
-
-    @action openCreateForm = () => {
-        this.IsEditCreateMode = true;
-        this.selectedActivity = undefined;
-    }
-
 
     @action loadActivities = async () => {
         //mutating state in MobX, can't do this in Redux
@@ -139,8 +121,37 @@ class ActivityStore {
         }
     }
 
-    @action loadActivity = async (id: String) => {
-        
+    @action loadActivity = async (id: string) => {
+        let activity = this.getActivity(id);
+
+        if (activity) {
+            this.selectedActivity = activity;
+        }
+        else {
+            //no activity in registry, call from API
+            this.IsLoading = true;
+            try {
+                activity = await ActivityService.details(id);
+                runInAction('getting activity', () => {
+                    this.selectedActivity = activity;
+                })
+            }
+            catch (error) {
+                console.log(error)
+            }
+            finally {
+                runInAction('load activity final', () => {
+                    this.IsLoading = false;
+                })
+            }
+        }
+
+        console.log("final" + this.selectedActivity?.id);
+
+
+    }
+    private getActivity = (id: string) => {
+        return this.activityRegistry.get(id);
     }
 }
 

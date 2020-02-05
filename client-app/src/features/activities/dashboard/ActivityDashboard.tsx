@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Grid } from 'semantic-ui-react';
 import ActivityList from './ActivityList';
-import ActivityDetails from '../details/ActivityDetails';
-import ActivityForm from '../form/ActivityForm';
+
 import { observer } from 'mobx-react-lite';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 import ActivityStore from '../../../app/stores/activityStore';
 
 
@@ -17,7 +17,20 @@ Allowing state properties to be passed through
 const ActivityDashboard: React.FC = () => {
 
     const activityStore = useContext(ActivityStore)
-    const {IsEditCreateMode, selectedActivity} = activityStore;
+
+
+    //second param ([]) is set empty bc we're telling react to not run this method again
+    //we're using it doesn't depend on any values from props or state so no re-run
+    useEffect(() => {
+      console.log("getting list");
+      activityStore.loadActivities();
+    }, [activityStore]);
+  
+    //gets called before useEffect
+    if (activityStore.IsLoading) {
+      console.log("loading");
+      return <LoadingComponent content="Loading Activity" />
+    }
 
     return (
         <Grid>
@@ -25,11 +38,7 @@ const ActivityDashboard: React.FC = () => {
                 <ActivityList />
             </Grid.Column>
             <Grid.Column width={6}>
-                {selectedActivity && <ActivityDetails />}
-                {IsEditCreateMode && 
-                    <ActivityForm 
-                        key = {selectedActivity && selectedActivity.id || 0}
-                    />  }
+                <h2>Filter</h2>
             </Grid.Column>
         </Grid>
     )
