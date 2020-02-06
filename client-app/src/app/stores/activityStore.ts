@@ -14,8 +14,33 @@ class ActivityStore {
     @observable IsSubmitting = false;
     @observable target = '';
 
-    @computed get activitiesByDate(): IActivity[] {
-        return Array.from(this.activityRegistry.values()).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+    @computed get activitiesByDate() {
+        return this.groupActivitiesByDate(Array.from(this.activityRegistry.values()));
+    }
+
+    private groupActivitiesByDate(activities: IActivity[]) {
+
+        const sortedActivitiesByDate = activities.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+
+        let mapGroupedActivities = new Map<string, IActivity[]>();
+
+        sortedActivitiesByDate.forEach((a) => {
+            let formattedDate = a.date.split('T')[0];
+
+            if (mapGroupedActivities.has(formattedDate)) {
+                let currentActivities = mapGroupedActivities.get(formattedDate);
+                currentActivities?.push(a);
+                mapGroupedActivities.set(formattedDate, currentActivities!);
+            }
+            else {
+                mapGroupedActivities.set(formattedDate, [a]);
+            }
+
+        });
+        console.log(mapGroupedActivities);
+
+        return mapGroupedActivities;
+
     }
 
     @action selectActivity = (id: string | null) => {
