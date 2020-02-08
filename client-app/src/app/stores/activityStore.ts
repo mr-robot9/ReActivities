@@ -37,7 +37,7 @@ class ActivityStore {
             }
 
         });
-        console.log(mapGroupedActivities);
+        // console.log(mapGroupedActivities);
 
         return mapGroupedActivities;
 
@@ -162,7 +162,7 @@ class ActivityStore {
                 })
             }
             catch (error) {
-                console.log(error)
+                console.log(error);
             }
             finally {
                 runInAction('load activity final', () => {
@@ -170,9 +170,6 @@ class ActivityStore {
                 })
             }
         }
-
-        console.log("final" + this.selectedActivity?.id);
-
 
     }
     private getActivity = (id: string) => {

@@ -32,13 +32,13 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Unit>> Create([FromBody]ActivitiesHandler.Create.Command newActivityCommand)
+        public async Task<ActionResult<Unit>> Create([FromBody]ActivitiesHandler.Command newActivityCommand)
         {
             return await _mediator.Send(newActivityCommand);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Unit>> Edit(Guid Id, [FromBody]ActivitiesHandler.Edit.Command activityToEditCommand)
+        public async Task<ActionResult<Unit>> Edit(Guid Id, [FromBody]ActivitiesHandler.Command activityToEditCommand)
         {
             //the body will not contain the id, the URL will
             activityToEditCommand.Activity.Id = Id;

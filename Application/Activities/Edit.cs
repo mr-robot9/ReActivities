@@ -1,7 +1,10 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using Domain;
+using FluentValidation;
 using MediatR;
 using Persistence;
 
@@ -9,11 +12,6 @@ namespace Application.Activities
 {
     public class Edit
     {
-        public class Command : IRequest
-        {
-            public Activity Activity { get; set; }
-        }
-
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
@@ -28,7 +26,7 @@ namespace Application.Activities
                 //get activity
                 var activityToEdit = await _context.Activities.FindAsync(request.Activity.Id);
 
-                if (activityToEdit == null) throw new Exception("Could not find activity");
+                if (activityToEdit == null) throw new RestException(HttpStatusCode.NotFound, new {activity = "Not Found"});
 
                 //update props
                 activityToEdit.Title = request.Activity.Title ?? activityToEdit.Title;

@@ -1,6 +1,8 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using Domain;
 using MediatR;
 using Persistence;
@@ -28,7 +30,7 @@ namespace Application.Activities
                 //find activity to delete
                 var activityToDelete = await _context.Activities.FindAsync(request.Activity.Id);
 
-                if (activityToDelete == null) throw new Exception("Could not find Activity");
+                if (activityToDelete == null) throw new RestException(HttpStatusCode.NotFound, new {activity = "Not Found"});
 
                 _context.Remove(activityToDelete);
 

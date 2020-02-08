@@ -8,6 +8,7 @@ import ActivityDetailedHeader from './ActivityDetailedHeader'
 import ActivityDetailedInfo  from './ActivityDetailedInfo'
 import { ActivityDetailedChat } from './ActivityDetailedChat'
 import { ActivityDetailedSidebar } from './ActivityDetailedSidebar'
+import NotFound from '../../../app/layout/NotFound'
 
 /*
 This component handles the details view of a single selected Activity
@@ -17,15 +18,23 @@ interface IDetailParams {
     id: string;
 }
 
-const ActivityDetails: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
+const ActivityDetails: React.FC<RouteComponentProps<IDetailParams>> = ({ match, history }) => {
     const activityStore = useContext(ActivityStore)
     const { selectedActivity, IsLoading } = activityStore;
 
     useEffect(() => {
-        activityStore.loadActivity(match.params.id)
-    }, [activityStore, match.params.id])
+        activityStore.loadActivity(match.params.id).catch( () => {
+            history.push('/NotFound'); //a route that doesn't exist will go to last route in app.tsx
+        })
+    }, [activityStore, match.params.id, history])
 
-    if (IsLoading || !selectedActivity) return <LoadingComponent content="Loading Activity" />
+    if (IsLoading) {
+
+        return <LoadingComponent content="Loading Activity" />
+    }
+
+    if (!selectedActivity) return <NotFound />
+
 
 
     return (
