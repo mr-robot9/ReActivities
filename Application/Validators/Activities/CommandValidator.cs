@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.Validators.Activities
 {
-    public class CommandValidator : AbstractValidator<Command>
+    public class CommandValidator<T> : AbstractValidator<T> where T : Command
     {
         public CommandValidator ()
         {
@@ -17,4 +17,23 @@ namespace Application.Validators.Activities
         }
 
     }
+
+    public class EditCommandValidator : CommandValidator<EditCommand>
+    {
+        //implicitly calls base
+        public EditCommandValidator () 
+        {
+
+        }
+    }
+
+    public class CreateCommandValidator : CommandValidator<CreateCommand>
+    {
+        //implicitly calls base
+        public CreateCommandValidator ()
+        {
+
+        }
+    }
+
 }

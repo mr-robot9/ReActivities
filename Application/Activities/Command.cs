@@ -7,4 +7,7 @@ namespace Application.Activities
     {
         public Activity Activity { get; set; } = null;
     }
+
+    public class EditCommand : Command {}
+    public class CreateCommand : Command {}
 }

@@ -10,7 +10,7 @@ namespace Application.Activities
 {
     public class Create
     {
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<CreateCommand>
         {
             private readonly DataContext _context;
 
@@ -19,7 +19,7 @@ namespace Application.Activities
                 _context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(CreateCommand request, CancellationToken cancellationToken)
             {
                 var newActivity = new Activity(request.Activity);
 

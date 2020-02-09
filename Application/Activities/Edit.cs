@@ -12,7 +12,7 @@ namespace Application.Activities
 {
     public class Edit
     {
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<EditCommand>
         {
             private readonly DataContext _context;
 
@@ -21,7 +21,7 @@ namespace Application.Activities
                 _context = context;
             }
 
-            public async Task<Unit> Handle (Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle (EditCommand request, CancellationToken cancellationToken)
             {
                 //get activity
                 var activityToEdit = await _context.Activities.FindAsync(request.Activity.Id);
