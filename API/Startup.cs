@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Middleware;
 using Application.Activities;
+using Domain;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +36,7 @@ namespace API
 
             services.AddDbContext<DataContext> (options =>
             {
-                options.UseSqlite (Configuration.GetConnectionString ("DefaultConnection"));
+               options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddCors (options =>
@@ -55,6 +57,13 @@ namespace API
                     //calls any classes with abstractvalidator
                     cfg.RegisterValidatorsFromAssemblyContaining<Create>();
                 });
+
+            var builder = services.AddIdentityCore<AppUser>();
+            var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
+            identityBuilder.AddEntityFrameworkStores<DataContext>(); //creates user stores
+            identityBuilder.AddSignInManager<SignInManager<AppUser>>(); //ability to create/manage users
+
+            services.AddAuthentication();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
