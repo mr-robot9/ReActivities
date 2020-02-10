@@ -61,6 +61,7 @@ namespace API
             //although we'll have many handlers, we just need to tell Startup the assembly of one for DI
             services.AddMediatR (typeof (List.Handler).Assembly);
 
+            //adding a policy making our controllers require authentication
             services.AddControllers (opt =>
                 {
                     var policy = new AuthorizationPolicyBuilder ().RequireAuthenticatedUser ().Build ();

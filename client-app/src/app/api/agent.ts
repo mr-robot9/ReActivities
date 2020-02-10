@@ -3,38 +3,45 @@ import { IActivity } from '../models/activity';
 import Activity from '../models/classes/Activity';
 import { history } from '../../';
 import { toast } from 'react-toastify';
+import { IUser, IUserFormValues } from '../models/interfaces/IUser';
+import { register } from '../../serviceWorker';
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
-axios.interceptors.response.use(undefined, error =>
-{
-    if (error.message === 'Network Error' && !error.response){
+//for each request being sent, send token in auth header
+//if error, send error 
+axios.interceptors.request.use((config) => {
+   const token = window.localStorage.getItem('jwt');
+   if(token) config.headers.Authorization = `Bearer ${token}`;
+   
+   return config;
+}, (error) => (Promise.reject(error)));
+
+//handle on response error
+axios.interceptors.response.use(undefined, error => {
+    if (error.message === 'Network Error' && !error.response) {
         toast.error('Network Error');
     }
 
     const { status, data, config } = error.response;
 
-    if (status === 404)
-    {
+    if (status === 404) {
         history.push('/NotFound');
     }
-    if (status === 400 && config.method === 'get' && data.errors.hasOwnProperty('id'))
-    {
+    if (status === 400 && config.method === 'get' && data.errors.hasOwnProperty('id')) {
         history.push('/NotFound');
     }
 
-    if (status === 500)
-    {
+    if (status === 500) {
         toast.error('Server Error - check the terminal for more info!');
     }
 
-    throw error;
+    throw error.response;
 })
 
 const responseBody = (response: AxiosResponse) => response.data;
 
-const sleep = (ms: number) => 
-{
+const sleep = (ms: number) => {
     return (response: AxiosResponse) =>
         new Promise<AxiosResponse>(resolve => setTimeout(() => resolve(response), ms));
 }
@@ -56,4 +63,13 @@ const ActivityService = {
     delete: (id: string) => requests.delete(`/activities/${id}`)
 }
 
-export default ActivityService;
+const UserService = {
+    current: (): Promise<IUser> => requests.get('/user'),
+    login: (user: IUserFormValues): Promise<IUser> => requests.post(`/user/login`, user),
+    register: (user: IUserFormValues): Promise<IUser> => requests.post(`/user/register`, user)
+}
+
+export {
+    ActivityService, 
+    UserService
+}

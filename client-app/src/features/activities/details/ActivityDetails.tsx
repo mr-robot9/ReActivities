@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from 'react'
 import {Grid}  from 'semantic-ui-react'
-import ActivityStore from '../../../app/stores/activityStore'
 import { observer } from 'mobx-react-lite'
 import { RouteComponentProps } from 'react-router-dom'
 import LoadingComponent from '../../../app/layout/LoadingComponent'
@@ -9,6 +8,7 @@ import ActivityDetailedInfo  from './ActivityDetailedInfo'
 import { ActivityDetailedChat } from './ActivityDetailedChat'
 import { ActivityDetailedSidebar } from './ActivityDetailedSidebar'
 import NotFound from '../../../app/layout/NotFound'
+import { RootStoreContext } from '../../../app/stores/rootStore'
 
 /*
 This component handles the details view of a single selected Activity
@@ -19,7 +19,8 @@ interface IDetailParams {
 }
 
 const ActivityDetails: React.FC<RouteComponentProps<IDetailParams>> = ({ match, history }) => {
-    const activityStore = useContext(ActivityStore)
+    const rootStore = useContext(RootStoreContext)
+    const {activityStore} = rootStore
     const { selectedActivity, IsLoading } = activityStore;
 
     useEffect(() => {

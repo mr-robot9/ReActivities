@@ -1,21 +1,28 @@
-import { observable, action, computed, configure, runInAction } from "mobx";
-import { createContext, SyntheticEvent } from "react";
+import { observable, action, computed, runInAction } from "mobx";
+import { SyntheticEvent } from "react";
 import { IActivity } from "../models/activity";
-import ActivityService from "../api/agent";
+import {ActivityService} from "../api/agent";
 import { isNullOrUndefined } from "util";
 import { history } from '../../';
 import { toast } from "react-toastify";
+import { RootStore } from "./rootStore";
 
-configure({ enforceActions: 'always' })
 
-class ActivityStore
+export default class ActivityStore
 {
+    rootStore: RootStore;
+
+    constructor(rootStore: RootStore) {
+        this.rootStore = rootStore;
+    }
+
     @observable activityRegistry = new Map();
     @observable activities: IActivity[] = [];
     @observable selectedActivity: IActivity | undefined;
     @observable IsLoading = false;
     @observable IsSubmitting = false;
     @observable target = '';
+
 
     @computed get activitiesByDate()
     {
@@ -24,7 +31,6 @@ class ActivityStore
 
     private groupActivitiesByDate(activities: IActivity[])
     {
-
         const sortedActivitiesByDate = activities.sort((a, b) => a.date.getTime() - b.date.getTime());
 
         let mapGroupedActivities = new Map<string, IActivity[]>();
@@ -231,5 +237,3 @@ class ActivityStore
         return this.activityRegistry.get(id);
     }
 }
-
-export default createContext(new ActivityStore());

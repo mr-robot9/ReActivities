@@ -3,7 +3,6 @@ import { Segment, Form, Button, Grid } from "semantic-ui-react";
 import { IActivityCreateFormValues } from "../../../app/models/activity";
 import { v4 as uuid } from "uuid";
 import { isNullOrUndefined } from "util";
-import ActivityStore from "../../../app/stores/activityStore";
 import { observer } from "mobx-react-lite";
 import { RouteComponentProps, Link } from "react-router-dom";
 import { Form as FinalForm, Field as FinalField } from "react-final-form";
@@ -15,6 +14,7 @@ import { category } from "../../../app/common/options/options";
 import { combineDateAndTime } from "../../../app/common/util/util";
 import { ActivityFormValues } from "../../../app/models/classes/ActivityFormValues";
 import { activityValidator } from "../../../app/common/validators/activityValidator";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 interface IDetailParams {
   id: string;
@@ -28,7 +28,8 @@ OR a newly created Activity form
 const ActivityForm: React.FC<RouteComponentProps<IDetailParams>> = ({
   match
 }) => {
-  const activityStore = useContext(ActivityStore);
+  const rootStore = useContext(RootStoreContext)
+  const {activityStore} = rootStore
   const {
     createActivity,
     editActivity,

@@ -4,7 +4,7 @@ import ActivityList from './ActivityList';
 
 import { observer } from 'mobx-react-lite';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
-import ActivityStore from '../../../app/stores/activityStore';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 
 /*
@@ -16,7 +16,8 @@ Allowing state properties to be passed through
 //instead of (props), we destructure the object and take out the properties we need
 const ActivityDashboard: React.FC = () => {
 
-    const activityStore = useContext(ActivityStore)
+    const rootStore = useContext(RootStoreContext)
+    const {activityStore} = rootStore;
 
 
     //second param ([]) is set empty bc we're telling react to not run this method again
