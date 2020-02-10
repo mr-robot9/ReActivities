@@ -5,36 +5,30 @@ using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ActivitiesController : ControllerBase
+    public class ActivitiesController : BaseController
     {
-        private readonly IMediator _mediator;
-
-        public ActivitiesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Activity>>> List(){
             
-            return await _mediator.Send(new ActivitiesHandler.List.Query());
+            return await Mediator.Send(new ActivitiesHandler.List.Query());
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Activity>> Details(Guid id){
             //object initialization
-            return await _mediator.Send(new ActivitiesHandler.Details.Query {Id = id});
+            return await Mediator.Send(new ActivitiesHandler.Details.Query {Id = id});
         }
 
         [HttpPost]
         public async Task<ActionResult<Unit>> Create([FromBody]ActivitiesHandler.CreateCommand newActivityCommand)
         {
-            return await _mediator.Send(newActivityCommand);
+            return await Mediator.Send(newActivityCommand);
         }
 
         [HttpPut("{id}")]
@@ -42,13 +36,13 @@ namespace API.Controllers
         {
             //the body will not contain the id, the URL will
             activityToEditCommand.Activity.Id = Id;
-            return await _mediator.Send(activityToEditCommand);
+            return await Mediator.Send(activityToEditCommand);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(Guid Id)
         {
-            return await _mediator.Send(new ActivitiesHandler.Delete.Command {Activity = new Activity {Id = Id}});
+            return await Mediator.Send(new ActivitiesHandler.Delete.Command {Activity = new Activity {Id = Id}});
         }
         
     }
