@@ -2,10 +2,13 @@ import React, { useContext, Fragment } from 'react'
 import { Container, Segment, Header, Button, Image } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { RootStoreContext } from '../../app/stores/rootStore';
+import ActivityList from '../activities/dashboard/ActivityList';
+import ActivityDashboard from '../activities/dashboard/ActivityDashboard';
+import { LoginForm } from '../user/LoginForm';
 
 export const HomePage = () => {
     const rootStore = useContext(RootStoreContext);
-    const { userStore } = rootStore;
+    const { userStore, modalStore: {openModal} } = rootStore;
 
     return (
         <Segment inverted textAlign='center' vertical className='masthead' >
@@ -24,7 +27,7 @@ export const HomePage = () => {
                     :
                     <Fragment>
                         <Header as='h2' inverted content={`Welcome to ReActivities`} />
-                        <Button as={Link} to='/login' size='huge' inverted>
+                        <Button onClick={() => openModal(<LoginForm />)} size='huge' inverted>
                             Login
                         </Button>
                         <Button as={Link} to='/login' size='huge' inverted>
