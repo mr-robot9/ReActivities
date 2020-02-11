@@ -11,6 +11,7 @@ import { RootStore } from "./rootStore";
 export default class ActivityStore
 {
     rootStore: RootStore;
+    registry = new Map();
 
     constructor(rootStore: RootStore) {
         this.rootStore = rootStore;
@@ -194,11 +195,10 @@ export default class ActivityStore
 
     @action loadActivity = async (id: string) =>
     {
-        let activity: IActivity = this.getActivity(id);
+        const activity: IActivity = this.registry.get(id);
 
         if (activity)
         {
-            this.selectedActivity = activity;
             return activity;
         }
         else
@@ -207,12 +207,12 @@ export default class ActivityStore
             this.IsLoading = true;
             try
             {
-                activity = await ActivityService.details(id);
+                let activity = await ActivityService.details(id);
                 runInAction('getting activity', () =>
                 {
                     activity.date = new Date(activity.date)
                     this.selectedActivity = activity;
-                    this.activityRegistry.set(activity.id, activity);
+                    this.setActivityInRegistry(activity);
 
                 })
                 return activity;
@@ -234,6 +234,22 @@ export default class ActivityStore
     }
     private getActivity = (id: string) =>
     {
-        return this.activityRegistry.get(id);
+        let activ : IActivity = {    id: "08d7ae55-ab6e-4a40-874c-eb7aa8fa69df",
+            title: "string",
+            description: "string",
+            category: "string",
+            date: new Date,
+            city: "string",
+            venue: "string" }
+
+         //return
+         return activ;
+
+    }
+
+    private setActivityInRegistry = (activity: IActivity) =>
+    {
+        this.activityRegistry.set(activity.id, activity);
+        this.registry.set(activity.id, activity);
     }
 }

@@ -4,7 +4,6 @@ import Activity from '../models/classes/Activity';
 import { history } from '../../';
 import { toast } from 'react-toastify';
 import { IUser, IUserFormValues } from '../models/interfaces/IUser';
-import { register } from '../../serviceWorker';
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 

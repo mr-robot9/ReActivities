@@ -3,7 +3,6 @@ import { IUser, IUserFormValues } from "../models/interfaces/IUser";
 import {UserService} from "../api/agent"
 import { RootStore } from "./rootStore";
 import { history } from "../..";
-import { act } from "react-dom/test-utils";
 
 export default class UserStore {
     rootStore: RootStore;
@@ -17,14 +16,31 @@ export default class UserStore {
 
     @computed get isLoggedIn() { return !!this.user}
 
+    @action register = async (values: IUserFormValues) => {
+        try {
+            const user = await UserService.register(values);
+
+            runInAction(() => {
+                this.rootStore.commonStore.setToken(user.token);
+                this.rootStore.modalStore.closeModal();
+            })
+            history.push('/activities');
+
+        } catch (error) {
+            throw error;            
+        }
+    }
+
     @action login = async (values: IUserFormValues) => {
         try {
             const user = await UserService.login(values);
 
             runInAction(() => {
                 this.user = user;
+                this.rootStore.commonStore.setToken(user.token);
+                this.rootStore.modalStore.closeModal();
+
             });
-            this.rootStore.commonStore.setToken(user.token);
             history.push('/activities');
         } catch (error) {
             throw error;

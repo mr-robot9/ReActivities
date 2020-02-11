@@ -29,7 +29,7 @@ const ActivityForm: React.FC<RouteComponentProps<IDetailParams>> = ({
   match
 }) => {
   const rootStore = useContext(RootStoreContext)
-  const {activityStore} = rootStore
+  const { activityStore } = rootStore
   const {
     createActivity,
     editActivity,
@@ -50,6 +50,12 @@ const ActivityForm: React.FC<RouteComponentProps<IDetailParams>> = ({
       loadActivity(match.params.id).then(activityFromStore => {
         setActivity(new ActivityFormValues(activityFromStore));
       });
+    }
+
+    //cleanup during unmount
+    return () => {
+      console.log("cleaning up");  
+      setActivity(new ActivityFormValues());
     }
   }, [loadActivity, match.params.id]);
 
@@ -136,7 +142,7 @@ const ActivityForm: React.FC<RouteComponentProps<IDetailParams>> = ({
                   content="Save"
                 />
                 <Button
-                  disabled={IsLoading }
+                  disabled={IsLoading}
                   as={Link}
                   to={
                     activity.id ? `/activities/${activity.id}` : "/activities"

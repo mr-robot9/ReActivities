@@ -33,7 +33,7 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
       setAppLoaded();
     }
 
-  }, [setAppLoaded, userStore.getSetUser(), token]);
+  }, [setAppLoaded, token, userStore]);
 
   if (!appLoaded) return <LoadingComponent content="Loading App..."/>
   
