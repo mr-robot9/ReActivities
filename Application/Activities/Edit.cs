@@ -32,7 +32,7 @@ namespace Application.Activities
                 activityToEdit.Title = request.Activity.Title ?? activityToEdit.Title;
                 activityToEdit.Description = request.Activity.Description ?? activityToEdit.Description;
                 activityToEdit.Category = request.Activity.Category ?? activityToEdit.Category;
-                activityToEdit.Date = request.Activity.Date ?? activityToEdit.Date;
+                activityToEdit.Date = activityToEdit.Date;
                 activityToEdit.City = request.Activity.City ?? activityToEdit.City;
                 activityToEdit.Venue = request.Activity.Venue ?? activityToEdit.Venue;
                 
