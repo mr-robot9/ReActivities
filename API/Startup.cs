@@ -25,6 +25,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
+using AutoMapper;
 
 namespace API
 {
@@ -43,6 +44,7 @@ namespace API
 
             services.AddDbContext<DataContext> (options =>
             {
+                options.UseLazyLoadingProxies();
                 options.UseMySql (Configuration.GetConnectionString ("DefaultConnection"));
             });
 
@@ -60,6 +62,8 @@ namespace API
 
             //although we'll have many handlers, we just need to tell Startup the assembly of one for DI
             services.AddMediatR (typeof (List.Handler).Assembly);
+
+            services.AddAutoMapper(typeof(List.Handler).Assembly); //look for mapping profiles in Application Assembly
 
             //adding a policy making our controllers require authentication
             services.AddControllers (opt =>
