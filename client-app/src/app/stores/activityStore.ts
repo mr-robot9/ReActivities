@@ -6,6 +6,7 @@ import { isNullOrUndefined } from "util";
 import { history } from '../../';
 import { toast } from "react-toastify";
 import { RootStore } from "./rootStore";
+import { setActivityProps } from "../common/util/util";
 
 
 export default class ActivityStore
@@ -162,6 +163,9 @@ export default class ActivityStore
     {
         //mutating state in MobX, can't do this in Redux
         this.IsLoading = true;
+        
+        //get current logged in user;
+        const user = this.rootStore.userStore.user!;
 
         try
         {
@@ -172,7 +176,7 @@ export default class ActivityStore
                 //splitting in order show in form
                 activities.forEach(a =>
                 {
-                    a.date = new Date(a.date!);
+                    setActivityProps(a, user);
                     this.activityRegistry.set(a.id, a);
                 });
             });
@@ -196,6 +200,7 @@ export default class ActivityStore
     @action loadActivity = async (id: string) =>
     {
         const activity: IActivity = this.registry.get(id);
+        const user = this.rootStore.userStore.user!;
 
         if (activity)
         {
@@ -210,7 +215,8 @@ export default class ActivityStore
                 let activity = await ActivityService.details(id);
                 runInAction('getting activity', () =>
                 {
-                    activity.date = new Date(activity.date)
+                    setActivityProps(activity, user);
+
                     this.selectedActivity = activity;
                     this.setActivityInRegistry(activity);
 
@@ -230,20 +236,6 @@ export default class ActivityStore
                 })
             }
         }
-
-    }
-    private getActivity = (id: string) =>
-    {
-        let activ : IActivity = {    id: "08d7ae55-ab6e-4a40-874c-eb7aa8fa69df",
-            title: "string",
-            description: "string",
-            category: "string",
-            date: new Date,
-            city: "string",
-            venue: "string" }
-
-         //return
-         return activ;
 
     }
 
