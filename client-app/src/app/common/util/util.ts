@@ -1,5 +1,5 @@
 import { IUser } from "../../models/interfaces/IUser";
-import { IActivity } from "../../models/activity";
+import { IActivity, IActivityAttendee } from "../../models/activity";
 
 export const combineDateAndTime = (date: Date, time: Date ) => {
     const timeString = time.getHours() + ':' + time.getMinutes() + ':00';
@@ -31,4 +31,13 @@ export const setActivityProps = (activity: IActivity, user: IUser) =>
     );
 
     // return activity;
+}
+
+export const createAttendee = (user: IUser) : IActivityAttendee => {
+    return {
+        displayName: user.displayName,
+        isHost: false,
+        username: user.username,
+        image: user.image!
+    };
 }
