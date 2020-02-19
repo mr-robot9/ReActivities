@@ -9,7 +9,7 @@ export default class ModalStore{
     }
 
     //bc we're passing in a component and rendering the body, 
-    //that component is making the body re-render multiple times 
+    //that component is making the body re-render mu6ltiple times 
     //which will be outside of an action
     //therefore, only make the modal property observable and not deeply into its 
     //properties

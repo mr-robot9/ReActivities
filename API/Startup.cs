@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Application.Activities;
 using Application.Interfaces;
 using API.Middleware;
+using AutoMapper;
 using Domain;
 using FluentValidation.AspNetCore;
+using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,7 +27,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
-using AutoMapper;
 
 namespace API
 {
@@ -44,7 +45,7 @@ namespace API
 
             services.AddDbContext<DataContext> (options =>
             {
-                options.UseLazyLoadingProxies();
+                options.UseLazyLoadingProxies ();
                 options.UseMySql (Configuration.GetConnectionString ("DefaultConnection"));
             });
 
@@ -59,11 +60,14 @@ namespace API
 
             services.AddScoped<IJwtGenerator, JwtGenerator> ();
             services.AddScoped<IUserAccessor, UserAccessor> ();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor> ();
+            //we can map our secrets to class
+            services.Configure<CloudinarySettings> (Configuration.GetSection ("Cloudinary"));
 
             //although we'll have many handlers, we just need to tell Startup the assembly of one for DI
             services.AddMediatR (typeof (List.Handler).Assembly);
 
-            services.AddAutoMapper(typeof(List.Handler).Assembly); //look for mapping profiles in Application Assembly
+            services.AddAutoMapper (typeof (List.Handler).Assembly); //look for mapping profiles in Application Assembly
 
             //adding a policy making our controllers require authentication
             services.AddControllers (opt =>
@@ -84,13 +88,15 @@ namespace API
             identityBuilder.AddEntityFrameworkStores<DataContext> (); //creates user stores
             identityBuilder.AddSignInManager<SignInManager<AppUser>> (); //ability to create/manage users
 
-            services.AddAuthorization(opt => {
-                opt.AddPolicy("IsActivityHost", policy =>{
-                    policy.Requirements.Add( new IsHostRequirement());
+            services.AddAuthorization (opt =>
+            {
+                opt.AddPolicy ("IsActivityHost", policy =>
+                {
+                    policy.Requirements.Add (new IsHostRequirement ());
                 });
             });
 
-            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler> ();
 
             var key = new SymmetricSecurityKey (Encoding.UTF8.GetBytes (Configuration["TokenKey"]));
             services.AddAuthentication (JwtBearerDefaults.AuthenticationScheme)

@@ -9,6 +9,7 @@ export const ActivityListItem: React.FC<{ activity: IActivity }> = ({
   activity
 }) => {
 
+  console.log(activity.attendees);
   const host = activity.attendees.filter( x => x.isHost)[0];
   return (
     <Segment.Group>
