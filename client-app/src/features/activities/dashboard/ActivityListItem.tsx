@@ -24,7 +24,7 @@ export const ActivityListItem: React.FC<{ activity: IActivity }> = ({
             <Item.Content>
               <Item.Header as={Link} to={`/activities/${activity.id}`}>{activity.title}</Item.Header>
               <Item.Meta>{format(activity.date!, 'h:mm a')}</Item.Meta>
-              <Item.Description>Hosted By {host.displayName}</Item.Description>
+              <Item.Description>Hosted By <Link to={`/profile/${host.username}`}>{host.displayName}</Link></Item.Description>
               <Item.Description>{activity.isHost && <Label basic color='orange' content='You are hosting this activity' />}</Item.Description>
               <Item.Description>{activity.isGoing && !activity.isHost && <Label basic color='green' content='You are going to this activity' />}</Item.Description>
             </Item.Content>
