@@ -4,6 +4,7 @@ import Activity from '../models/classes/Activity';
 import { history } from '../../';
 import { toast } from 'react-toastify';
 import { IUser, IUserFormValues } from '../models/interfaces/IUser';
+import { IProfile } from '../models/profile';
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -70,7 +71,12 @@ const UserService = {
     register: (user: IUserFormValues): Promise<IUser> => requests.post(`/user/register`, user)
 }
 
+const ProfileService = {
+    get: (username: string): Promise<IProfile> => requests.get(`/profiles/${username}`)
+}
+
 export {
     ActivityService, 
-    UserService
+    UserService,
+    ProfileService
 }
