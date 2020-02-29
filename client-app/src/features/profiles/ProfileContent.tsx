@@ -20,5 +20,5 @@ const panes = [
 ];
 
 export const ProfileContent = () => {
-  return <Tab menu={{ fluid: true, vertical: true }} menuPosition = 'right' panes = {panes} />;
+  return <Tab menu={{ fluid: true, vertical: true }} menuPosition = 'right' panes = {panes} activeIndex={1} />;
 };
