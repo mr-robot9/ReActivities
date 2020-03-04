@@ -5,6 +5,7 @@ import { history } from '../../';
 import { toast } from 'react-toastify';
 import { IUser, IUserFormValues } from '../models/interfaces/IUser';
 import { IProfile, IPhoto } from '../models/profile';
+import { IProfileAboutFormValues } from '../models/interfaces/IProfile';
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -82,7 +83,8 @@ const ProfileService = {
     get: (username: string): Promise<IProfile> => requests.get(`/profiles/${username}`),
     uploadPhoto: (photo: Blob): Promise<IPhoto> => requests.postForm(`/photos`, photo),
     setMainPhoto: (id: string) => requests.post(`/photos/${id}/setMain`, {}),
-    deletePhoto: (id: string) => requests.delete(`/photos/${id}`)
+    deletePhoto: (id: string) => requests.delete(`/photos/${id}`),
+    updateProfile: (profile: IProfileAboutFormValues) => requests.put(`/profiles`, profile)
 }
 
 export {

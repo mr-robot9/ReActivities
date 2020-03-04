@@ -18,6 +18,10 @@ namespace Application.Validators.Activities
 
     }
 
+/// <summary>
+/// This is automatically called by Fluent Validation 
+/// This validator calls its parent const and gets called for EditCommands
+/// </summary>
     public class EditCommandValidator : CommandValidator<EditCommand>
     {
         //implicitly calls base
@@ -26,7 +30,10 @@ namespace Application.Validators.Activities
 
         }
     }
-
+/// <summary>
+/// This is automatically called by Fluent Validation 
+/// This validator calls its parent const and gets called for CreateCommands
+/// </summary>
     public class CreateCommandValidator : CommandValidator<CreateCommand>
     {
         //implicitly calls base
