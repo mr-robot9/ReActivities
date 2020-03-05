@@ -33,5 +33,7 @@ namespace Domain
         public string Venue { get; set; }
         //the jxn table
         public virtual ICollection<UserActivity> UserActivities { get; set; }
+        //Can have Many comments
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
