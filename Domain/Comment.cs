@@ -11,6 +11,6 @@ namespace Domain
         //EF WILL WILL KNOW TO ADD AN FK DURING MIGRATION
         public virtual AppUser Author { get; set; } 
         public virtual Activity Activity { get; set; }
-        public string CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

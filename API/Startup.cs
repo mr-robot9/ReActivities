@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Application.Activities;
 using Application.Interfaces;
 using API.Middleware;
+using API.SignalR;
 using AutoMapper;
 using Domain;
 using FluentValidation.AspNetCore;
@@ -54,7 +55,7 @@ namespace API
                 //allows any requests from localhost;3000 to get into app
                 options.AddPolicy ("CorsPolicy", policy =>
                 {
-                    policy.AllowAnyHeader ().AllowAnyMethod ().WithOrigins ("http://localhost:3000");
+                    policy.AllowAnyHeader ().AllowAnyMethod ().WithOrigins ("http://localhost:3000").AllowCredentials();
                 });
             });
 
@@ -68,6 +69,8 @@ namespace API
             services.AddMediatR (typeof (List.Handler).Assembly);
 
             services.AddAutoMapper (typeof (List.Handler).Assembly); //look for mapping profiles in Application Assembly
+
+            services.AddSignalR (); //not core bc we want to use all default services
 
             //adding a policy making our controllers require authentication
             services.AddControllers (opt =>
@@ -109,6 +112,23 @@ namespace API
                     ValidateAudience = false,
                     ValidateIssuer = false
                     };
+
+                    opt.Events = new JwtBearerEvents
+                    {
+                        //OnMessageReceived add token to context hub
+                        OnMessageReceived = (context) =>
+                        {
+                            //grab token initialized from client side
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty (accessToken) && path.StartsWithSegments ("/chat"))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+
+                        }
+                    };
                 });
 
         }
@@ -134,6 +154,7 @@ namespace API
             app.UseEndpoints (endpoints =>
             {
                 endpoints.MapControllers ();
+                endpoints.MapHub<ChatHub> ("/chat");
             });
         }
     }
