@@ -38,6 +38,7 @@ export const createAttendee = (user: IUser) : IActivityAttendee => {
         displayName: user.displayName,
         isHost: false,
         username: user.username,
-        image: user.image!
+        image: user.image!,
+        following: false
     };
 }

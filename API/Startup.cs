@@ -28,6 +28,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
+using Application.Profiles;
 
 namespace API
 {
@@ -62,6 +63,7 @@ namespace API
             services.AddScoped<IJwtGenerator, JwtGenerator> ();
             services.AddScoped<IUserAccessor, UserAccessor> ();
             services.AddScoped<IPhotoAccessor, PhotoAccessor> ();
+            services.AddScoped<IProfileReader, ProfileReader> ();
             //we can map our secrets to class
             services.Configure<CloudinarySettings> (Configuration.GetSection ("Cloudinary"));
 

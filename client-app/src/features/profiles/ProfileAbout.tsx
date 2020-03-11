@@ -1,10 +1,9 @@
-import React, { useContext, useState, Fragment } from "react";
-import { Tab, Grid, Header, Button, Label, List } from "semantic-ui-react";
+import React, { useContext, useState} from "react";
+import { Tab, Grid, Header, Button, List } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import { ProfileAboutForm } from "./ProfileAboutForm";
 import { observer } from "mobx-react-lite";
 import { IProfileAboutFormValues } from "../../app/models/interfaces/IProfile";
-import { FORM_ERROR } from "final-form";
 
 const ProfileAbout = () => {
   const rootStore = useContext(RootStoreContext);

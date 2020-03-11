@@ -14,7 +14,8 @@ namespace Application.Activities
             CreateMap<UserActivity, AttendeeDto> ()
                 .ForMember (dto => dto.Username, opt => opt.MapFrom (ua => ua.AppUser.UserName))
                 .ForMember (dto => dto.DisplayName, opt => opt.MapFrom (ua => ua.AppUser.DisplayName))
-                .ForMember(dto => dto.Image, o => o.MapFrom(ua => ua.AppUser.Photos.FirstOrDefault(p => p.IsMain).URL ));
+                .ForMember(dto => dto.Image, o => o.MapFrom(ua => ua.AppUser.Photos.FirstOrDefault(p => p.IsMain).URL ))
+                .ForMember(dto => dto.Following, o => o.MapFrom<FollowingMapperResolver>());
         }
     }
 }

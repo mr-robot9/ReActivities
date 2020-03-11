@@ -40,7 +40,7 @@ namespace Persistence
             builder.Entity<UserActivity> ().HasOne (u => u.AppUser).WithMany (appU => appU.UserActivities).HasForeignKey (u => u.AppUserId);
             builder.Entity<UserActivity> ().HasOne (a => a.Activity).WithMany (act => act.UserActivities).HasForeignKey (a => a.ActivityId);
 
-            //M:M relationship for user following
+            //self referencing M:M relationship for user following entity regarding the User entity
             builder.Entity<UserFollowing> (b =>
             {
                 //create key with observer and target id

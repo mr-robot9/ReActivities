@@ -35,4 +35,5 @@ export interface IActivityAttendee{
     displayName: string;
     image: string;
     isHost: boolean;
+    following: boolean;
 }
