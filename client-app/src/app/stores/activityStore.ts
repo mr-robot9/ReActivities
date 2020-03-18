@@ -9,6 +9,8 @@ import { RootStore } from "./rootStore";
 import { setActivityProps, createAttendee } from "../common/util/util";
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
+const LIMIT = 2;
+
 
 export default class ActivityStore
 {
@@ -28,6 +30,19 @@ export default class ActivityStore
     @observable IsLoading = false; //for loading components
     @observable IsActionLoading = false; //for loading calls to API once already in component
     @observable.ref hubConnection: HubConnection | null = null; //null bc only load when Activity Details page is loaded
+
+    @observable activityCount = 0;
+    @observable page = 0;
+
+    @computed get totalPages()
+    {
+        return Math.ceil(this.activityCount/LIMIT);
+    }
+
+    @action setPage = (page: number) =>
+    {
+        this.page = page;
+    }
 
     //create hub connection to listen to events
     @action createHubConnection = (activityId: string) =>
@@ -237,7 +252,8 @@ export default class ActivityStore
 
         try
         {
-            const activities = await ActivityService.list();
+            const activitiesEnv = await ActivityService.list(LIMIT, this.page);
+            const {activities, activityCount} = activitiesEnv;
 
             runInAction('Loading Activities', () =>
             {
@@ -247,6 +263,8 @@ export default class ActivityStore
                     setActivityProps(a, user);
                     this.activityRegistry.set(a.id, a);
                 });
+
+                this.activityCount = activityCount;
             });
 
 
