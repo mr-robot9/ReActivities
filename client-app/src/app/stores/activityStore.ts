@@ -1,4 +1,4 @@
-import { observable, action, computed, runInAction } from "mobx";
+import { observable, action, computed, runInAction, reaction } from "mobx";
 import { SyntheticEvent } from "react";
 import { IActivity } from "../models/activity";
 import { ActivityService } from "../api/agent";
@@ -20,6 +20,16 @@ export default class ActivityStore
     constructor(rootStore: RootStore)
     {
         this.rootStore = rootStore;
+
+        reaction(
+            () => this.predicate.keys(), //if any keys change, reload activities with sid predicates
+            () => 
+            {
+                this.page = 0;
+                this.activityRegistry.clear();
+                this.loadActivities();
+            }
+        )
     }
 
     @observable activityRegistry = new Map();
@@ -33,6 +43,36 @@ export default class ActivityStore
 
     @observable activityCount = 0;
     @observable page = 0;
+    @observable predicate = new Map<string, any>();
+
+    @action setPredicate = (predicate: string, value: string | Date) =>
+    {
+        this.predicate.clear();
+        if(predicate !== 'all')
+        {
+            this.predicate.set(predicate, value);
+        }
+    }
+    
+    @computed get axiosParams()
+    {
+        const params = new URLSearchParams();
+
+        params.append('limit', String(LIMIT));
+        params.append('offset', `${this.page ? this.page * LIMIT : 0}`);
+        this.predicate.forEach((v, k) => {
+            if (k === 'startDate')
+            {
+                params.append(k, v.toISOString());
+            }
+            else
+            {
+                params.append(k, v);
+            }
+        });
+
+        return params;
+    }
 
     @computed get totalPages()
     {
@@ -252,7 +292,7 @@ export default class ActivityStore
 
         try
         {
-            const activitiesEnv = await ActivityService.list(LIMIT, this.page);
+            const activitiesEnv = await ActivityService.list(this.axiosParams);
             const {activities, activityCount} = activitiesEnv;
 
             runInAction('Loading Activities', () =>

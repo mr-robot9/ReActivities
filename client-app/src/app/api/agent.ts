@@ -72,7 +72,8 @@ const requests = {
 
 
 const ActivityService = {
-    list: (limit?: number, offset?: number): Promise<IActivitiesEnvelope> => requests.get(`/activities?limit=${limit}&offset=${offset ? offset * limit! : 0}`),
+    list: (params: URLSearchParams): Promise<IActivitiesEnvelope> => 
+        axios.get('/activities', {params: params}).then(sleep(1000)).then(responseBody),
     details: (id: string) => requests.get(`/activities/${id}`),
     create: (activity: IActivity) => requests.post('/activities', new Activity(activity)),
     update: (activity: IActivity) => requests.put(`/activities/${activity.id}`, new Activity(activity)),
@@ -95,7 +96,8 @@ const ProfileService = {
     updateProfile: (profile: IProfileAboutFormValues) => requests.put(`/profiles`, profile),
     follow: (username: string) => requests.post(`/profiles/${username}/follow`, {}),
     unfollow: (username: string) => requests.delete(`/profiles/${username}/follow`),
-    listFollowings: (username: string, predicate: string) => requests.get(`/profiles/${username}/follow?predicate=${predicate}`)
+    listFollowings: (username: string, predicate: string) => requests.get(`/profiles/${username}/follow?predicate=${predicate}`),
+    listActivities: (username: string, predicate: string) => requests.get(`/profiles/${username}/activities?predicate=${predicate}`)
 }
 
 export

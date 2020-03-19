@@ -7,6 +7,7 @@ import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 
 import InfiniteScroll from "react-infinite-scroller";
+import ActivityFilters from "./ActivityFilters";
 
 /*
 This component acts as the middleman between App.tsx and activity related features
@@ -45,14 +46,14 @@ const ActivityDashboard: React.FC = () => {
         <InfiniteScroll
           pageStart={0}
           loadMore={handleGetNext}
-          hasMore={!loadingNext && page + 1 < totalPages} //not loading next bc we don't want to load if currently loading next
+          hasMore={!loadingNext && page + 1 < totalPages} //!loadingNext bc we don't want to load if currently loading next
           initialLoad={false}
         >
           <ActivityList />
         </InfiniteScroll>
       </Grid.Column>
       <Grid.Column width={6}>
-        <h2>Filter</h2>
+        <ActivityFilters />
       </Grid.Column>
       <Grid.Column width={10}>
         <Loader active={loadingNext}/>

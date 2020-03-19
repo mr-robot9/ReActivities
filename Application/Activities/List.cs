@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Interfaces;
 using AutoMapper;
 using Domain;
 using MediatR;
@@ -19,8 +21,11 @@ namespace Application.Activities
         }
         public class Query : IRequest<ActivitiesEnvelope>
         {
-            public Query (int? limit, int? offset)
+            public Query (int? limit, int? offset, bool isGoing, bool isHost, DateTime? startDate)
             {
+                StartDate = startDate ?? DateTime.Now;
+                IsGoing = isGoing;
+                IsHost = isHost;
                 Limit = limit;
                 Offset = offset;
 
@@ -28,33 +33,50 @@ namespace Application.Activities
             public int? Limit { get; set; } //# of items we return
             public int? Offset { get; set; } //# of items to skip
 
+            public bool IsHost { get; set; }
+            public bool IsGoing { get; set; }
+            public DateTime? StartDate { get; set; }
+
         }
 
         public class Handler : IRequestHandler<Query, ActivitiesEnvelope>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler (DataContext context, IMapper mapper)
+            public Handler (DataContext context, IMapper mapper, IUserAccessor userAccessor)
             {
+                _userAccessor = userAccessor;
                 _mapper = mapper;
                 _context = context;
 
             }
             public async Task<ActivitiesEnvelope> Handle (Query request, CancellationToken cancellationToken)
             {
-                var queryable = _context.Activities.AsQueryable();
+                var queryable = _context.Activities
+                    .Where (x => x.Date >= request.StartDate)
+                    .OrderBy (x => x.Date)
+                    .AsQueryable ();
 
+                if (request.IsGoing && !request.IsHost)
+                {
+                    queryable = queryable.Where (x => x.UserActivities.Any(ua => ua.AppUser.UserName == _userAccessor.GetCurrentUsername()));
+                }
 
+                if (request.IsHost && !request.IsGoing)
+                {
+                    queryable = queryable.Where (x => x.UserActivities.Any(ua => ua.AppUser.UserName == _userAccessor.GetCurrentUsername() && ua.IsHost));
+                }
                 var activities = await queryable
-                                .Skip(request.Offset ?? 0)
-                                .Take(request.Limit ?? 3)
-                                .ToListAsync();
+                    .Skip (request.Offset ?? 0)
+                    .Take (request.Limit ?? 3)
+                    .ToListAsync ();
 
                 return new ActivitiesEnvelope
                 {
                     Activities = _mapper.Map<List<Activity>, List<ActivityDto>> (activities),
-                    ActivityCount = queryable.Count()
+                    ActivityCount = queryable.Count ()
                 };
 
             }

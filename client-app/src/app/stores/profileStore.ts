@@ -3,7 +3,7 @@ import { observable, action, runInAction, computed, reaction } from "mobx";
 import { ProfileService } from "../api/agent";
 import { IProfile, IPhoto } from "../models/profile";
 import { toast } from "react-toastify";
-import { IProfileAboutFormValues } from "../models/interfaces/IProfile";
+import { IProfileAboutFormValues, IUserActivity } from "../models/interfaces/IProfile";
 
 export default class ProfileStore
 {
@@ -38,6 +38,8 @@ export default class ProfileStore
     @observable loading = false;
     @observable followings: IProfile[] = [];
     @observable activeTab: number = 0;
+    @observable userActivities: IUserActivity[] = [];
+    @observable loadingActivities = false;
 
     @computed get isCurrentUser()
     {
@@ -52,6 +54,24 @@ export default class ProfileStore
     @action setActiveTab = (activeIndex: number) => 
     {
         this.activeTab = activeIndex;
+    }
+
+    @action loadUserActivities = async (username: string, predicate?: string) =>
+    {
+        this.loadingActivities = true;
+        try {
+            const activities = await ProfileService.listActivities(username, predicate!);
+
+            runInAction(() => {
+                this.userActivities = activities;
+                this.loadingActivities = false;
+            });
+        } catch (error) {
+            toast.error('Problem Loading Activities');
+            runInAction(() => {
+                this.loadingActivities = false;
+            })
+        }
     }
     
 
