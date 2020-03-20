@@ -48,7 +48,7 @@ const ProfileEvents = () => {
     <Tab.Pane loading={loadingActivities}>
       <Grid>
         <Grid.Column width={16}>
-          <Header floated='left' icon='calendar' content={'Activities'} />
+          <Header floated="left" icon="calendar" content={'Activities'} />
         </Grid.Column>
         <Grid.Column width={16}>
           <Tab
@@ -69,8 +69,8 @@ const ProfileEvents = () => {
                   style={{ minHeight: 100, objectFit: 'cover' }}
                 />
                 <Card.Content>
-                  <Card.Header textAlign='center'>{activity.title}</Card.Header>
-                  <Card.Meta textAlign='center'>
+                  <Card.Header textAlign="center">{activity.title}</Card.Header>
+                  <Card.Meta textAlign="center">
                     <div>{format(new Date(activity.date), 'do LLL')}</div>
                     <div>{format(new Date(activity.date), 'h:mm a')}</div>
                   </Card.Meta>

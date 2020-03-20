@@ -1,7 +1,7 @@
-import React from "react";
-import { FieldRenderProps } from "react-final-form";
-import { FormFieldProps, Form, Label } from "semantic-ui-react";
-import { DateTimePicker } from "react-widgets";
+import React from 'react';
+import { FieldRenderProps } from 'react-final-form';
+import { FormFieldProps, Form, Label } from 'semantic-ui-react';
+import { DateTimePicker } from 'react-widgets';
 
 interface IProps extends FieldRenderProps<Date>, FormFieldProps {
   //all properties needed are inside the inherited classes
@@ -14,7 +14,7 @@ export const DateInput: React.FC<IProps> = ({
   meta,
   date = false,
   time = false,
-  id= null,
+  id = null,
   ...rest
 }) => {
   return (
@@ -24,9 +24,9 @@ export const DateInput: React.FC<IProps> = ({
         value={input.value || null}
         onChange={input.onChange}
         onBlur={input.onBlur}
-        onKeyDown={(e) => e.preventDefault()}
-        date = {date}
-        time = {time}
+        onKeyDown={e => e.preventDefault()}
+        date={date}
+        time={time}
         {...rest}
       />
       {meta.touched && meta.error && (

@@ -1,13 +1,13 @@
-import { Form as FinalForm, Field as FinalField } from "react-final-form";
-import { FORM_ERROR } from "final-form";
-import { IProfileAboutFormValues } from "../../app/models/interfaces/IProfile";
-import { profileAboutValidator } from "../../app/common/validators/profileAboutValidator";
-import React, { useState, useEffect } from "react";
-import {Button, Form } from "semantic-ui-react";
-import { TextInput } from "../../app/common/form/TextInput";
-import { ErrorMessage } from "../../app/common/form/ErrorMessage";
-import { TextAreaInput } from "../../app/common/form/TextAreaInput";
-import { IProfile } from "../../app/models/profile";
+import { Form as FinalForm, Field as FinalField } from 'react-final-form';
+import { FORM_ERROR } from 'final-form';
+import { IProfileAboutFormValues } from '../../app/models/interfaces/IProfile';
+import { profileAboutValidator } from '../../app/common/validators/profileAboutValidator';
+import React, { useState, useEffect } from 'react';
+import { Button, Form } from 'semantic-ui-react';
+import { TextInput } from '../../app/common/form/TextInput';
+import { ErrorMessage } from '../../app/common/form/ErrorMessage';
+import { TextAreaInput } from '../../app/common/form/TextAreaInput';
+import { IProfile } from '../../app/models/profile';
 
 interface IProps {
   profile: IProfile;
@@ -19,8 +19,8 @@ export const ProfileAboutForm: React.FC<IProps> = ({
   updateProfileHandler
 }) => {
   const [profileAbout, setProfileAbout] = useState<IProfileAboutFormValues>({
-    bio: "",
-    displayName: ""
+    bio: '',
+    displayName: ''
   });
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const ProfileAboutForm: React.FC<IProps> = ({
 
     //when we unmount reset profileAbout
     return () => {
-      setProfileAbout({ bio: "", displayName: "" });
+      setProfileAbout({ bio: '', displayName: '' });
     };
   }, [profile.bio, profile.displayName]);
 
@@ -63,7 +63,7 @@ export const ProfileAboutForm: React.FC<IProps> = ({
             name="bio"
             component={TextAreaInput}
             placeholder="Bio"
-            value={profile.bio ?? ""}
+            value={profile.bio ?? ''}
           />
           {submitError && !dirtySinceLastSubmit && (
             <ErrorMessage error={submitError} />

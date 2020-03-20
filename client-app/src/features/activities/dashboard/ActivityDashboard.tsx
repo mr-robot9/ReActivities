@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Grid, Button, Loader } from "semantic-ui-react";
-import ActivityList from "./ActivityList";
+import React, { useContext, useEffect, useState } from 'react';
+import { Grid, Button, Loader } from 'semantic-ui-react';
+import ActivityList from './ActivityList';
 
-import { observer } from "mobx-react-lite";
-import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { RootStoreContext } from "../../../app/stores/rootStore";
+import { observer } from 'mobx-react-lite';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
-import InfiniteScroll from "react-infinite-scroller";
-import ActivityFilters from "./ActivityFilters";
+import InfiniteScroll from 'react-infinite-scroller';
+import ActivityFilters from './ActivityFilters';
 
 /*
 This component acts as the middleman between App.tsx and activity related features
@@ -30,13 +30,13 @@ const ActivityDashboard: React.FC = () => {
   //second param ([]) is set empty bc we're telling react to not run this method again
   //we're using it doesn't depend on any values from props or state so no re-run
   useEffect(() => {
-    console.log("getting list");
+    console.log('getting list');
     activityStore.loadActivities();
   }, [activityStore]);
 
   //gets called before useEffect
   if (activityStore.IsLoading && page == 0) {
-    console.log("loading");
+    console.log('loading');
     return <LoadingComponent content="Loading Activities" />;
   }
 
@@ -56,7 +56,7 @@ const ActivityDashboard: React.FC = () => {
         <ActivityFilters />
       </Grid.Column>
       <Grid.Column width={10}>
-        <Loader active={loadingNext}/>
+        <Loader active={loadingNext} />
       </Grid.Column>
     </Grid>
   );

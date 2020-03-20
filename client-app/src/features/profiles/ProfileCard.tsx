@@ -1,13 +1,12 @@
 import React from 'react';
-import { Card, Image, Icon} from 'semantic-ui-react';
+import { Card, Image, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { IProfile } from '../../app/models/profile';
 import { observer } from 'mobx-react-lite';
-interface IProps
-{
-    profile: IProfile;
+interface IProps {
+  profile: IProfile;
 }
-const ProfileCard: React.FC<IProps> = ({profile}) => {
+const ProfileCard: React.FC<IProps> = ({ profile }) => {
   return (
     <Card as={Link} to={`/profile/${profile.username}`}>
       <Image src={profile.image || '/Assets/Images/user.png'} />
@@ -16,7 +15,7 @@ const ProfileCard: React.FC<IProps> = ({profile}) => {
       </Card.Content>
       <Card.Content extra>
         <div>
-          <Icon name='user' />
+          <Icon name="user" />
           {profile.followersCount} Followers
         </div>
       </Card.Content>

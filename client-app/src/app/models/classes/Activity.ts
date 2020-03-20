@@ -1,11 +1,9 @@
-import { IActivity } from "../activity";
+import { IActivity } from '../activity';
 
-export default class Activity{
-    Activity: IActivity;
+export default class Activity {
+  Activity: IActivity;
 
-    constructor(newActivity: IActivity)
-    {
-        this.Activity = newActivity;
-    }
-
+  constructor(newActivity: IActivity) {
+    this.Activity = newActivity;
+  }
 }

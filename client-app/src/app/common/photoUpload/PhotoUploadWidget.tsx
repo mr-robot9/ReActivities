@@ -1,8 +1,8 @@
-import React, { Fragment, useState, useEffect } from "react";
-import { Header, Grid, Button } from "semantic-ui-react";
-import { observer } from "mobx-react-lite";
-import PhotoWidgetDropzone from "./PhotoWidgetDropzone";
-import { PhotoWidgetCropper } from "./PhotoWidgetCropper";
+import React, { Fragment, useState, useEffect } from 'react';
+import { Header, Grid, Button } from 'semantic-ui-react';
+import { observer } from 'mobx-react-lite';
+import PhotoWidgetDropzone from './PhotoWidgetDropzone';
+import { PhotoWidgetCropper } from './PhotoWidgetCropper';
 
 interface IProps {
   uploadPhoto: (file: Blob) => void;
@@ -14,10 +14,10 @@ const PhotoUploadWidget: React.FC<IProps> = ({ uploadPhoto, loading }) => {
   const [image, setImage] = useState<Blob | null>(null);
 
   useEffect(() => {
-    console.log("hello");
+    console.log('hello');
     //cleanup ComponentWillUnmount essentially in class comp
     return () => {
-      console.log("cleaning up");
+      console.log('cleaning up');
       files.forEach(file => URL.revokeObjectURL(file.preview));
     };
   }, [files]);
@@ -46,11 +46,20 @@ const PhotoUploadWidget: React.FC<IProps> = ({ uploadPhoto, loading }) => {
             <Fragment>
               <div
                 className="img-preview"
-                style={{ minHeight: "200px", overflow: "hidden" }}
+                style={{ minHeight: '200px', overflow: 'hidden' }}
               />
               <Button.Group widths={2}>
-                <Button positive icon='check' loading={loading} onClick={() => uploadPhoto(image!)}/>
-                <Button icon='close' disabled={loading} onClick={() => setFiles([])}/>
+                <Button
+                  positive
+                  icon="check"
+                  loading={loading}
+                  onClick={() => uploadPhoto(image!)}
+                />
+                <Button
+                  icon="close"
+                  disabled={loading}
+                  onClick={() => setFiles([])}
+                />
               </Button.Group>
             </Fragment>
           )}

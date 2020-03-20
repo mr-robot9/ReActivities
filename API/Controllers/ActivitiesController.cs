@@ -7,6 +7,7 @@ using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Comments = Application.Comments;
 
 namespace API.Controllers
 {
@@ -60,6 +61,12 @@ namespace API.Controllers
         public async Task<ActionResult<Unit>> Unattend (Guid id)
         {
             return await Mediator.Send (new ActivitiesHandler.Unattend.Command { Id = id });
+        }
+
+        [HttpDelete("{id}/comment/{commentId}")]
+        public async Task<ActionResult<Unit>> DeleteComment(Guid id, Guid commentId)
+        {
+            return await Mediator.Send(new Comments.Delete.Command {ActivityId = id, CommentId = commentId});
         }
 
     }

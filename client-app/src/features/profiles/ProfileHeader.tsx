@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Segment,
   Item,
@@ -8,9 +8,9 @@ import {
   Statistic,
   Divider,
   Reveal
-} from "semantic-ui-react";
-import { IProfile } from "../../app/models/profile";
-import { observer } from "mobx-react-lite";
+} from 'semantic-ui-react';
+import { IProfile } from '../../app/models/profile';
+import { observer } from 'mobx-react-lite';
 interface IProps {
   profile: IProfile;
   follow: (username: string) => void;
@@ -34,7 +34,7 @@ const ProfileHeader: React.FC<IProps> = ({
               <Item.Image
                 avatar
                 size="small"
-                src={profile.image || "/Assets/Images/user.png"}
+                src={profile.image || '/Assets/Images/user.png'}
               />
               <Item.Content verticalAlign="middle">
                 <Header as="h1">{profile.displayName}</Header>
@@ -50,11 +50,11 @@ const ProfileHeader: React.FC<IProps> = ({
           <Divider />
           {!isCurrentUser && (
             <Reveal animated="move">
-              <Reveal.Content visible style={{ width: "100%" }}>
+              <Reveal.Content visible style={{ width: '100%' }}>
                 <Button
                   fluid
                   color="teal"
-                  content={profile.following ? "Following" : "Not Following"}
+                  content={profile.following ? 'Following' : 'Not Following'}
                 />
               </Reveal.Content>
               <Reveal.Content hidden>
@@ -62,8 +62,8 @@ const ProfileHeader: React.FC<IProps> = ({
                   loading={loading}
                   fluid
                   basic
-                  color={profile.following ? "red" : "green"}
-                  content={profile.following ? "Unfollow" : "Follow"}
+                  color={profile.following ? 'red' : 'green'}
+                  content={profile.following ? 'Unfollow' : 'Follow'}
                   onClick={
                     profile.following
                       ? () => unfollow(profile.username)

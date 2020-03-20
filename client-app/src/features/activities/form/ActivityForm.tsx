@@ -1,20 +1,20 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Segment, Form, Button, Grid } from "semantic-ui-react";
-import { IActivityCreateFormValues } from "../../../app/models/activity";
-import { v4 as uuid } from "uuid";
-import { isNullOrUndefined } from "util";
-import { observer } from "mobx-react-lite";
-import { RouteComponentProps, Link } from "react-router-dom";
-import { Form as FinalForm, Field as FinalField } from "react-final-form";
-import { TextInput } from "../../../app/common/form/TextInput";
-import { TextAreaInput } from "../../../app/common/form/TextAreaInput";
-import { SelectInput } from "../../../app/common/form/SelectInput";
-import { DateInput } from "../../../app/common/form/DateInput";
-import { category } from "../../../app/common/options/options";
-import { combineDateAndTime } from "../../../app/common/util/util";
-import { ActivityFormValues } from "../../../app/models/classes/ActivityFormValues";
-import { activityValidator } from "../../../app/common/validators/activityValidator";
-import { RootStoreContext } from "../../../app/stores/rootStore";
+import React, { useState, useContext, useEffect } from 'react';
+import { Segment, Form, Button, Grid } from 'semantic-ui-react';
+import { IActivityCreateFormValues } from '../../../app/models/activity';
+import { v4 as uuid } from 'uuid';
+import { isNullOrUndefined } from 'util';
+import { observer } from 'mobx-react-lite';
+import { RouteComponentProps, Link } from 'react-router-dom';
+import { Form as FinalForm, Field as FinalField } from 'react-final-form';
+import { TextInput } from '../../../app/common/form/TextInput';
+import { TextAreaInput } from '../../../app/common/form/TextAreaInput';
+import { SelectInput } from '../../../app/common/form/SelectInput';
+import { DateInput } from '../../../app/common/form/DateInput';
+import { category } from '../../../app/common/options/options';
+import { combineDateAndTime } from '../../../app/common/util/util';
+import { ActivityFormValues } from '../../../app/models/classes/ActivityFormValues';
+import { activityValidator } from '../../../app/common/validators/activityValidator';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 interface IDetailParams {
   id: string;
@@ -28,8 +28,8 @@ OR a newly created Activity form
 const ActivityForm: React.FC<RouteComponentProps<IDetailParams>> = ({
   match
 }) => {
-  const rootStore = useContext(RootStoreContext)
-  const { activityStore } = rootStore
+  const rootStore = useContext(RootStoreContext);
+  const { activityStore } = rootStore;
   const {
     createActivity,
     editActivity,
@@ -54,9 +54,9 @@ const ActivityForm: React.FC<RouteComponentProps<IDetailParams>> = ({
 
     //cleanup during unmount
     return () => {
-      console.log("cleaning up");  
+      console.log('cleaning up');
       setActivity(new ActivityFormValues());
-    }
+    };
   }, [loadActivity, match.params.id]);
 
   const handleFinalFormSubmit = (values: any) => {
@@ -94,13 +94,13 @@ const ActivityForm: React.FC<RouteComponentProps<IDetailParams>> = ({
                   name="description"
                   placeholder="Description"
                   rows={3}
-                  value={activity?.description ?? ""}
+                  value={activity?.description ?? ''}
                   component={TextAreaInput}
                 />
                 <FinalField
                   name="category"
                   placeholder="Category"
-                  value={activity?.category ?? ""}
+                  value={activity?.category ?? ''}
                   component={SelectInput}
                   options={category}
                 />
@@ -109,14 +109,14 @@ const ActivityForm: React.FC<RouteComponentProps<IDetailParams>> = ({
                     name="date"
                     placeholder="Date"
                     date={true}
-                    value={activity?.date ?? ""}
+                    value={activity?.date ?? ''}
                     component={DateInput}
                   />
                   <FinalField
                     name="time"
                     placeholder="Time"
                     time={true}
-                    value={activity?.date ?? ""}
+                    value={activity?.date ?? ''}
                     component={DateInput}
                   />
                 </Form.Group>
@@ -124,13 +124,13 @@ const ActivityForm: React.FC<RouteComponentProps<IDetailParams>> = ({
                 <FinalField
                   name="city"
                   placeholder="City"
-                  value={activity?.city ?? ""}
+                  value={activity?.city ?? ''}
                   component={TextInput}
                 />
                 <FinalField
                   name="venue"
                   placeholder="Venue"
-                  value={activity?.venue ?? ""}
+                  value={activity?.venue ?? ''}
                   component={TextInput}
                 />
                 <Button
@@ -145,7 +145,7 @@ const ActivityForm: React.FC<RouteComponentProps<IDetailParams>> = ({
                   disabled={IsLoading}
                   as={Link}
                   to={
-                    activity.id ? `/activities/${activity.id}` : "/activities"
+                    activity.id ? `/activities/${activity.id}` : '/activities'
                   }
                   floated="right"
                   content="Cancel"

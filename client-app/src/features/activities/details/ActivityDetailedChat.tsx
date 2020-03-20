@@ -1,11 +1,11 @@
-import React, { Fragment, useContext, useEffect } from "react";
-import { Segment, Header, Form, Button, Comment } from "semantic-ui-react";
-import { RootStoreContext } from "../../../app/stores/rootStore";
-import { Form as FinalForm, Field } from "react-final-form";
-import { Link } from "react-router-dom";
-import { TextAreaInput } from "../../../app/common/form/TextAreaInput";
-import { observer } from "mobx-react-lite";
-import { formatDistance } from "date-fns";
+import React, { Fragment, useContext, useEffect } from 'react';
+import { Segment, Header, Form, Button, Comment } from 'semantic-ui-react';
+import { RootStoreContext } from '../../../app/stores/rootStore';
+import { Form as FinalForm, Field } from 'react-final-form';
+import { Link } from 'react-router-dom';
+import { TextAreaInput } from '../../../app/common/form/TextAreaInput';
+import { observer } from 'mobx-react-lite';
+import { formatDistance } from 'date-fns';
 
 const ActivityDetailedChat = () => {
   const rootStore = useContext(RootStoreContext);
@@ -30,7 +30,7 @@ const ActivityDetailedChat = () => {
         attached="top"
         inverted
         color="teal"
-        style={{ border: "none" }}
+        style={{ border: 'none' }}
       >
         <Header>Chat about this event</Header>
       </Segment>
@@ -39,7 +39,7 @@ const ActivityDetailedChat = () => {
           {selectedActivity &&
             selectedActivity.comments.map(c => (
               <Comment key={c.id}>
-                <Comment.Avatar src={c.image || "/Assets/Images/user.png"} />
+                <Comment.Avatar src={c.image || '/Assets/Images/user.png'} />
                 <Comment.Content>
                   <Comment.Author as={Link} to={`/profile/${c.username}`}>
                     {c.displayName}

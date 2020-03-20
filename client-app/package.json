@@ -40,7 +40,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint . --ext .ts",
+    "lint-and-fix": "eslint . --ext .ts --fix",
+    "prettier-format": "prettier --write \"**/*.+(ts|tsx|json|css|md)\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -59,6 +62,14 @@
   },
   "devDependencies": {
     "@types/react-infinite-scroller": "^1.2.1",
-    "@types/revalidate": "^1.1.2"
+    "@types/revalidate": "^1.1.2",
+    "@typescript-eslint/eslint-plugin": "^2.24.0",
+    "@typescript-eslint/parser": "^2.24.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.19.0",
+    "prettier": "^1.19.1"
   }
 }

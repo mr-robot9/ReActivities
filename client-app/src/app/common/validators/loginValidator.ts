@@ -1,6 +1,6 @@
-import { combineValidators, isRequired } from 'revalidate'
+import { combineValidators, isRequired } from 'revalidate';
 
 export const loginValidator = combineValidators({
-    email: isRequired('Email'),
-    password: isRequired('Password')
+  email: isRequired('Email'),
+  password: isRequired('Password')
 });

@@ -1,19 +1,19 @@
-import React, { useContext, useState} from "react";
-import { Tab, Grid, Header, Button, List } from "semantic-ui-react";
-import { RootStoreContext } from "../../app/stores/rootStore";
-import { ProfileAboutForm } from "./ProfileAboutForm";
-import { observer } from "mobx-react-lite";
-import { IProfileAboutFormValues } from "../../app/models/interfaces/IProfile";
+import React, { useContext, useState } from 'react';
+import { Tab, Grid, Header, Button, List } from 'semantic-ui-react';
+import { RootStoreContext } from '../../app/stores/rootStore';
+import { ProfileAboutForm } from './ProfileAboutForm';
+import { observer } from 'mobx-react-lite';
+import { IProfileAboutFormValues } from '../../app/models/interfaces/IProfile';
 
 const ProfileAbout = () => {
   const rootStore = useContext(RootStoreContext);
-  const { profile, isCurrentUser, updateProfile} = rootStore.profileStore;
+  const { profile, isCurrentUser, updateProfile } = rootStore.profileStore;
 
   const [editProfileMode, setEditProfileMode] = useState(false);
 
   const updateProfileHandler = (values: IProfileAboutFormValues) => {
     return updateProfile(values).then(() => setEditProfileMode(false));
-  }
+  };
 
   return (
     <Tab.Pane>
@@ -29,13 +29,16 @@ const ProfileAbout = () => {
               onClick={() => setEditProfileMode(!editProfileMode)}
               floated="right"
               basic
-              content={editProfileMode ? "Cancel" : "Edit Profile"}
+              content={editProfileMode ? 'Cancel' : 'Edit Profile'}
             />
           )}
         </Grid.Column>
         <Grid.Column width={16}>
           {editProfileMode ? (
-            <ProfileAboutForm profile={profile!} updateProfileHandler={updateProfileHandler} />
+            <ProfileAboutForm
+              profile={profile!}
+              updateProfileHandler={updateProfileHandler}
+            />
           ) : (
             <List>
               <List.Item>

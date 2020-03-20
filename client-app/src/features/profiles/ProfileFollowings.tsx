@@ -1,17 +1,12 @@
-import React, { useContext } from "react";
-import { Tab, Grid, Header, Card } from "semantic-ui-react";
-import { RootStoreContext } from "../../app/stores/rootStore";
-import ProfileCard from "./ProfileCard";
-import { observer } from "mobx-react-lite";
+import React, { useContext } from 'react';
+import { Tab, Grid, Header, Card } from 'semantic-ui-react';
+import { RootStoreContext } from '../../app/stores/rootStore';
+import ProfileCard from './ProfileCard';
+import { observer } from 'mobx-react-lite';
 
 const ProfileFollowings = () => {
   const rootStore = useContext(RootStoreContext);
-  const {
-    profile,
-    followings,
-    loading,
-    activeTab
-  } = rootStore.profileStore;
+  const { profile, followings, loading, activeTab } = rootStore.profileStore;
   return (
     <Tab.Pane loading={loading}>
       <Grid>
@@ -29,7 +24,7 @@ const ProfileFollowings = () => {
         <Grid.Column width={16}>
           <Card.Group itemsPerRow={5}>
             {followings.map(profile => (
-              <ProfileCard key={profile.username} profile={profile}/>
+              <ProfileCard key={profile.username} profile={profile} />
             ))}
           </Card.Group>
         </Grid.Column>
