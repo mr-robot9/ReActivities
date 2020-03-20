@@ -18,8 +18,7 @@ const ActivityDetailedChat = () => {
   } = rootStore.activityStore;
 
   useEffect(() => {
-    if(hubConnection == null)
-    {
+    if (hubConnection == null) {
       createHubConnection(selectedActivity!.id);
     }
     return () => {
