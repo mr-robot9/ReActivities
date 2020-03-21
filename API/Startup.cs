@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Activities;
 using Application.Interfaces;
+using Application.Profiles;
 using API.Middleware;
 using API.SignalR;
 using AutoMapper;
@@ -26,9 +27,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
-using Application.Profiles;
 
 namespace API
 {
@@ -56,7 +57,12 @@ namespace API
                 //allows any requests from localhost;3000 to get into app
                 options.AddPolicy ("CorsPolicy", policy =>
                 {
-                    policy.AllowAnyHeader ().AllowAnyMethod ().WithOrigins ("http://localhost:3000").AllowCredentials();
+                    policy
+                    .AllowAnyHeader ()
+                    .AllowAnyMethod ()
+                    .WithOrigins ("http://localhost:3000")
+                    .WithExposedHeaders("WWW-Authenticate")
+                    .AllowCredentials ();
                 });
             });
 
@@ -112,7 +118,9 @@ namespace API
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = key,
                     ValidateAudience = false,
-                    ValidateIssuer = false
+                    ValidateIssuer = false,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero //don't wait for 5 min cache 
                     };
 
                     opt.Events = new JwtBearerEvents
@@ -140,6 +148,7 @@ namespace API
         {
 
             app.UseMiddleware<ErrorHandlingMiddleware> ();
+            IdentityModelEventSource.ShowPII = true;
 
             if (env.IsDevelopment ())
             {
