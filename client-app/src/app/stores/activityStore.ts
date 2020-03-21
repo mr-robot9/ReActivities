@@ -1,4 +1,4 @@
-import { observable, action, computed, runInAction, reaction } from 'mobx';
+import { observable, action, computed, runInAction, reaction, toJS } from 'mobx';
 import { SyntheticEvent } from 'react';
 import { IActivity } from '../models/activity';
 import { ActivityService } from '../api/agent';
@@ -79,7 +79,7 @@ export default class ActivityStore {
   //create hub connection to listen to events
   @action createHubConnection = (activityId: string) => {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl('http://localhost:5000/chat', {
+      .withUrl(process.env.REACT_APP_API_CHAT_URL!, {
         accessTokenFactory: () => this.rootStore.commonStore.token!
       })
       .configureLogging(LogLevel.Information)
@@ -277,7 +277,7 @@ export default class ActivityStore {
     const user = this.rootStore.userStore.user!;
 
     if (activity) {
-      return activity;
+      return toJS(activity); //we don't want to return an observable that is going to modified outside 
     } else {
       //no activity in registry, call from API
       this.IsLoading = true;
