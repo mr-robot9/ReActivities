@@ -148,12 +148,16 @@ namespace API
         {
 
             app.UseMiddleware<ErrorHandlingMiddleware> ();
-            IdentityModelEventSource.ShowPII = true;
+            
 
             if (env.IsDevelopment ())
             {
+                IdentityModelEventSource.ShowPII = true;
                 // app.UseDeveloperExceptionPage ();
             }
+
+            app.UseDefaultFiles(); //to tell our app to look for conventional names like index.html etc
+            app.UseStaticFiles();
 
             /* app.UseHttpsRedirection(); */
             app.UseRouting ();
@@ -166,6 +170,8 @@ namespace API
             {
                 endpoints.MapControllers ();
                 endpoints.MapHub<ChatHub> ("/chat");
+                endpoints.MapFallbackToController("Index", "Fallback");
+
             });
         }
     }
