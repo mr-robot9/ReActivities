@@ -41,7 +41,7 @@ namespace API.SignalR
         //client calls this when clicks activity detail
         public async Task AddToGroup (string groupName)
         {
-            var connectionKey = $"{Context.ConnectionId}:{groupName}";
+            var connectionKey = $"{GetUsername()}:{groupName}";
             if (!hashConnections.Contains (connectionKey))
             {
                 await Groups.AddToGroupAsync (Context.ConnectionId, groupName);
@@ -54,7 +54,7 @@ namespace API.SignalR
         //called when exits of out of activity detail
         public async Task RemoveFromGroup (string groupName)
         {
-            var connectionKey = $"{Context.ConnectionId}:{groupName}";
+            var connectionKey = $"{GetUsername()}:{groupName}";
             await Groups.RemoveFromGroupAsync (Context.ConnectionId, groupName);
             hashConnections.Remove (connectionKey);
 
