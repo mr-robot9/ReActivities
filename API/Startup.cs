@@ -26,7 +26,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
@@ -58,11 +57,11 @@ namespace API
                 options.AddPolicy ("CorsPolicy", policy =>
                 {
                     policy
-                    .AllowAnyHeader ()
-                    .AllowAnyMethod ()
-                    .WithOrigins ("http://localhost:3000")
-                    .WithExposedHeaders("WWW-Authenticate")
-                    .AllowCredentials ();
+                        .AllowAnyHeader ()
+                        .AllowAnyMethod ()
+                        .WithOrigins ("http://localhost:3000")
+                        .WithExposedHeaders ("WWW-Authenticate")
+                        .AllowCredentials ();
                 });
             });
 
@@ -70,6 +69,7 @@ namespace API
             services.AddScoped<IUserAccessor, UserAccessor> ();
             services.AddScoped<IPhotoAccessor, PhotoAccessor> ();
             services.AddScoped<IProfileReader, ProfileReader> ();
+            
             //we can map our secrets to class
             services.Configure<CloudinarySettings> (Configuration.GetSection ("Cloudinary"));
 
@@ -148,16 +148,16 @@ namespace API
         {
 
             app.UseMiddleware<ErrorHandlingMiddleware> ();
-            
 
+            IdentityModelEventSource.ShowPII = true;
             if (env.IsDevelopment ())
             {
-                IdentityModelEventSource.ShowPII = true;
+
                 // app.UseDeveloperExceptionPage ();
             }
 
-            app.UseDefaultFiles(); //to tell our app to look for conventional names like index.html etc
-            app.UseStaticFiles();
+            app.UseDefaultFiles (); //to tell our app to look for conventional names like index.html etc
+            app.UseStaticFiles ();
 
             /* app.UseHttpsRedirection(); */
             app.UseRouting ();
@@ -170,7 +170,7 @@ namespace API
             {
                 endpoints.MapControllers ();
                 endpoints.MapHub<ChatHub> ("/chat");
-                endpoints.MapFallbackToController("Index", "Fallback");
+                endpoints.MapFallbackToController ("Index", "Fallback");
 
             });
         }

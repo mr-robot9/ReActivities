@@ -8,6 +8,7 @@ using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Serilog;
 
 namespace Application.Photos
 {
@@ -33,26 +34,33 @@ namespace Application.Photos
 
             public async Task<Unit> Handle (Command request, CancellationToken cancellationToken)
             {
+                try
+                {
+                    var user = await _context.Users.SingleOrDefaultAsync (x => x.UserName == _userAccessor.GetCurrentUsername ());
 
-                var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+                    var photo = user.Photos.FirstOrDefault (x => x.Id == request.Id);
 
-                var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
+                    if (photo == null) throw new RestException (HttpStatusCode.NotFound, new { Photo = "Not Found" });
 
-                if (photo == null) throw new RestException(HttpStatusCode.NotFound, new {Photo = "Not Found"});
+                    if (photo.IsMain) throw new RestException (HttpStatusCode.BadRequest, new { Photo = "Can't delete main photo" });
 
-                if (photo.IsMain) throw new RestException(HttpStatusCode.BadRequest, new {Photo = "Can't delete main photo"});
+                    var result = _photoAccessor.DeletePhoto (request.Id); //call cloudinary to delete
 
-                var result = _photoAccessor.DeletePhoto(request.Id); //call cloudinary to delete
+                    if (result == null) throw new Exception ("Problem Deleting Photo");
 
-                if (result == null ) throw new Exception("Problem Deleting Photo");
+                    user.Photos.Remove (photo); //del from DB
 
-                user.Photos.Remove(photo); //del from DB
-                 
-                var IsSuccessful = await _context.SaveChangesAsync () > 0;
+                    var IsSuccessful = await _context.SaveChangesAsync () > 0;
 
-                if (IsSuccessful) return Unit.Value;
+                    if (IsSuccessful) return Unit.Value;
 
-                throw new Exception ("Problem");
+                    throw new Exception ("Problem");
+                }
+                catch (Exception exc)
+                {
+                    Log.Error ($"Error adding photo: {exc.Message}");
+                    throw;
+                }
 
             }
         }

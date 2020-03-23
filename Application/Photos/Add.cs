@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Serilog;
 
 namespace Application.Photos
 {
@@ -29,31 +30,42 @@ namespace Application.Photos
                 _photoAccessor = photoAccessor;
                 _userAccessor = userAccessor;
                 _context = context;
+
             }
 
             public async Task<Photo> Handle (Command request, CancellationToken cancellationToken)
             {
-                var photoUploadResult = _photoAccessor.AddPhoto (request.File);
-
-                var user = await _context.Users.SingleOrDefaultAsync (x => x.UserName == _userAccessor.GetCurrentUsername ());
-
-                var photo = new Photo
+                try
                 {
-                    URL = photoUploadResult.URL,
-                    Id = photoUploadResult.PublicId
-                };
 
-                if (!user.Photos.Any(x => x.IsMain))
-                    photo.IsMain = true;
+                    var photoUploadResult = _photoAccessor.AddPhoto (request.File);
 
-                user.Photos.Add(photo);
+                    var user = await _context.Users.SingleOrDefaultAsync (x => x.UserName == _userAccessor.GetCurrentUsername ());
 
-                //logic for adding here 
-                var IsSuccessful = await _context.SaveChangesAsync () > 0;
+                    var photo = new Photo
+                    {
+                        URL = photoUploadResult.URL,
+                        Id = photoUploadResult.PublicId
+                    };
 
-                if (IsSuccessful) return photo;
+                    if (!user.Photos.Any (x => x.IsMain))
+                        photo.IsMain = true;
 
-                throw new Exception ("Problem");
+                    user.Photos.Add (photo);
+
+                    //logic for adding here 
+                    var IsSuccessful = await _context.SaveChangesAsync () > 0;
+
+                    if (IsSuccessful) return photo;
+                    throw new Exception ("Unsuccessful Save to DB");
+
+                }
+                catch (Exception exc)
+                {
+                    Log.Error($"Error adding photo: {exc.Message}");
+                    throw;
+                }
+
 
             }
         }

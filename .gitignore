@@ -6,3 +6,4 @@ Logs
 appsettings.json
 API/appsettings.Development.json
 wwwroot
+publish
