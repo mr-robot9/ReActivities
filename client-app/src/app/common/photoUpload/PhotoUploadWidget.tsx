@@ -14,10 +14,9 @@ const PhotoUploadWidget: React.FC<IProps> = ({ uploadPhoto, loading }) => {
   const [image, setImage] = useState<Blob | null>(null);
 
   useEffect(() => {
-    console.log('hello');
     //cleanup ComponentWillUnmount essentially in class comp
     return () => {
-      console.log('cleaning up');
+      //console.log('cleaning up');
       files.forEach(file => URL.revokeObjectURL(file.preview));
     };
   }, [files]);

@@ -68,7 +68,10 @@ const App: React.FC<RouteComponentProps> = ({ location }) => {
                     path={['/createActivity', '/manage/:id']}
                     component={ActivityForm}
                   />
-                  <PrivateRoute path="/profile/:username" component={ProfilePage} />
+                  <PrivateRoute
+                    path="/profile/:username"
+                    component={ProfilePage}
+                  />
                   <Route component={NotFound} />
                 </Switch>
               </Container>

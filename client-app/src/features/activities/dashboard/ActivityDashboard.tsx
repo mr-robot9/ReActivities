@@ -30,7 +30,6 @@ const ActivityDashboard: React.FC = () => {
   //second param ([]) is set empty bc we're telling react to not run this method again
   //we're using it doesn't depend on any values from props or state so no re-run
   useEffect(() => {
-    console.log('getting list');
     activityStore.loadActivities();
   }, [activityStore]);
 

@@ -11,7 +11,8 @@ import { observer } from 'mobx-react-lite';
 interface IProps extends RouteProps {
   component: React.ComponentType<RouteComponentProps<any>>;
 }
-const PrivateRoute: React.FC<IProps> = ({ component: Component, ...rest }) => { //(component: Component) bc we have to call it Component in order to use it!
+const PrivateRoute: React.FC<IProps> = ({ component: Component, ...rest }) => {
+  //(component: Component) bc we have to call it Component in order to use it!
   const rootStore = useContext(RootStoreContext);
   const { isLoggedIn } = rootStore.userStore;
 

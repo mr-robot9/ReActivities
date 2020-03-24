@@ -54,7 +54,6 @@ const ActivityForm: React.FC<RouteComponentProps<IDetailParams>> = ({
 
     //cleanup during unmount
     return () => {
-      console.log('cleaning up');
       setActivity(new ActivityFormValues());
     };
   }, [loadActivity, match.params.id]);

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { TextAreaInput } from '../../../app/common/form/TextAreaInput';
 import { observer } from 'mobx-react-lite';
 import { formatDistance } from 'date-fns';
+import { IComment } from '../../../app/models/activity';
 
 const ActivityDetailedChat = () => {
   const rootStore = useContext(RootStoreContext);
@@ -14,8 +15,14 @@ const ActivityDetailedChat = () => {
     stopHubConnection,
     addComment,
     selectedActivity,
-    hubConnection
+    hubConnection,
+    deleteComment
   } = rootStore.activityStore;
+  const { user } = rootStore.userStore;
+
+  const IsCommentAuthor = (comment: IComment): boolean => {
+    return user!.username === comment.username;
+  };
 
   useEffect(() => {
     createHubConnection(selectedActivity!.id);
@@ -49,6 +56,13 @@ const ActivityDetailedChat = () => {
                     <div>{formatDistance(c.createdAt, new Date())}</div>
                   </Comment.Metadata>
                   <Comment.Text>{c.body}</Comment.Text>
+                  {IsCommentAuthor(c) && (
+                    <Comment.Actions>
+                      <Comment.Action onClick={() => deleteComment(c.id)}>
+                        Delete
+                      </Comment.Action>
+                    </Comment.Actions>
+                  )}
                 </Comment.Content>
               </Comment>
             ))}

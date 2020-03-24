@@ -1,4 +1,11 @@
-import { observable, action, computed, runInAction, reaction, toJS } from 'mobx';
+import {
+  observable,
+  action,
+  computed,
+  runInAction,
+  reaction,
+  toJS
+} from 'mobx';
 import { SyntheticEvent } from 'react';
 import { IActivity } from '../models/activity';
 import { ActivityService } from '../api/agent';
@@ -86,24 +93,16 @@ export default class ActivityStore {
       .build();
     this.hubConnection
       .start()
-      .then(() => console.log(this.hubConnection!.state))
       .then(() => {
-        console.log('Attempting to join group');
         this.hubConnection!.invoke('AddToGroup', activityId);
       })
       .catch(error => console.log('Error establishing connection: ', error));
 
     //when ReceiveComment from ChatHub is invoked
     this.hubConnection.on('ReceiveComment', comment => {
-      console.log('received event');
       runInAction(() => {
         this.selectedActivity!.comments.push(comment);
       });
-    });
-
-    //when ReceiveComment from ChatHub is invoked
-    this.hubConnection.on('Send', msg => {
-      console.log(msg);
     });
   };
 
@@ -113,7 +112,6 @@ export default class ActivityStore {
       .then(() => {
         this.hubConnection!.stop();
       })
-      .then(() => console.log('Connection has stopped'))
       .catch(err => console.log('Error: ', err));
   };
 
@@ -162,7 +160,6 @@ export default class ActivityStore {
     this.selectedActivity = isNullOrUndefined(id)
       ? undefined
       : this.activityRegistry.get(id);
-    console.log('activity is ' + this.selectedActivity);
   };
 
   @action editActivity = async (activityToEdit: IActivity) => {
@@ -277,7 +274,7 @@ export default class ActivityStore {
     const user = this.rootStore.userStore.user!;
 
     if (activity) {
-      return toJS(activity); //we don't want to return an observable that is going to modified outside 
+      return toJS(activity); //we don't want to return an observable that is going to modified outside
     } else {
       //no activity in registry, call from API
       this.IsLoading = true;
@@ -343,6 +340,18 @@ export default class ActivityStore {
     }
   };
 
+  @action deleteComment = async (commentId: string) => {
+    try {
+      await ActivityService.deleteComment(this.selectedActivity!.id, commentId);
+      runInAction(() => {
+        this.selectedActivity!.comments = this.selectedActivity!.comments.filter(
+          c => c.id != commentId
+        );
+      });
+    } catch (error) {
+      toast.error('Problem deleting comment');
+    }
+  };
   private setActivityInRegistry = (activity: IActivity) => {
     this.activityRegistry.set(activity.id, activity);
     this.registry.set(activity.id, activity);
