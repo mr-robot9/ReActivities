@@ -18,8 +18,6 @@ namespace API
 {
     public class Program
     {
-        private static string _environmentName;
-
         public static void Main (string[] args)
         {
 
@@ -58,6 +56,7 @@ namespace API
             Host.CreateDefaultBuilder (args)
             .ConfigureWebHostDefaults (webBuilder =>
             {
+                webBuilder.UseKestrel(x => x.AddServerHeader = false); //remove server header to remove info about software being ran on server
                 webBuilder.UseStartup<Startup> ();
             });
     }

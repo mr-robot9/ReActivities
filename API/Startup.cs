@@ -69,7 +69,7 @@ namespace API
             services.AddScoped<IUserAccessor, UserAccessor> ();
             services.AddScoped<IPhotoAccessor, PhotoAccessor> ();
             services.AddScoped<IProfileReader, ProfileReader> ();
-            
+
             //we can map our secrets to class
             services.Configure<CloudinarySettings> (Configuration.GetSection ("Cloudinary"));
 
@@ -149,12 +149,29 @@ namespace API
 
             app.UseMiddleware<ErrorHandlingMiddleware> ();
 
-            IdentityModelEventSource.ShowPII = true;
             if (env.IsDevelopment ())
             {
+                IdentityModelEventSource.ShowPII = true;
 
                 // app.UseDeveloperExceptionPage ();
             }
+            app.UseXContentTypeOptions(); //prevent content sniffing 
+            app.UseReferrerPolicy(opt => opt.NoReferrer()); //restrict info being sent to other sites when we refer said sites
+            app.UseXXssProtection(opt => opt.EnabledWithBlockMode()); //stop page from loading when detect reflected xss attacks
+            app.UseXfo(opt => opt.Deny()); //block IFRAME use to prevent click jacking
+
+            //content security policy header to allow content we want; will prevent use of CDNs
+            //use reportonly to tell us what we need to do to fix
+            app.UseCspReportOnly(opt => opt
+                .BlockAllMixedContent() //prevent assets from loading http if page loaded with https
+                .StyleSources(s => s.Self())
+                .FontSources(s => s.Self())
+                .FormActions(s => s.Self())
+                .FrameAncestors(s => s.Self())
+                .ImageSources(s => s.Self())
+                .ScriptSources(s => s.Self())
+            );
+
 
             app.UseDefaultFiles (); //to tell our app to look for conventional names like index.html etc
             app.UseStaticFiles ();
