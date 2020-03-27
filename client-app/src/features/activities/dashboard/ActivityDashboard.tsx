@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, Button, Loader } from 'semantic-ui-react';
+import { Grid, Loader } from 'semantic-ui-react';
 import ActivityList from './ActivityList';
 
 import { observer } from 'mobx-react-lite';
@@ -36,7 +36,7 @@ const ActivityDashboard: React.FC = () => {
   return (
     <Grid>
       <Grid.Column width={10}>
-        {activityStore.IsLoading && page == 0 ? (
+        {activityStore.IsLoading && page === 0 ? (
           <ActivityListItemPlaceholder />
         ) : (
           <InfiniteScroll

@@ -161,15 +161,15 @@ namespace API
             app.UseXfo(opt => opt.Deny()); //block IFRAME use to prevent click jacking
 
             //content security policy header to allow content we want; will prevent use of CDNs
-            //use reportonly to tell us what we need to do to fix
-            app.UseCspReportOnly(opt => opt
+            //use reportonly to tell us what we need to do to fix instead of full block
+            app.UseCsp(opt => opt
                 .BlockAllMixedContent() //prevent assets from loading http if page loaded with https
-                .StyleSources(s => s.Self())
-                .FontSources(s => s.Self())
+                .StyleSources(s => s.Self().CustomSources("https://fonts.googleapis.com", "sha256-F4GpCPyRepgP5znjMD8sc7PEjzet5Eef4r09dEGPpTs="))
+                .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com", "data:"))
                 .FormActions(s => s.Self())
                 .FrameAncestors(s => s.Self())
-                .ImageSources(s => s.Self())
-                .ScriptSources(s => s.Self())
+                .ImageSources(s => s.Self().CustomSources("https://res.cloudinary.com", "blob:", "data:")) //blob, data for when adding image
+                .ScriptSources(s => s.Self().CustomSources("sha256-ma5XxS1EBgt17N22Qq31rOxxRWRfzUTQS1KOtfYwuNo="))
             );
 
 

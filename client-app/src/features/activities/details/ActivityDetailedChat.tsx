@@ -15,7 +15,6 @@ const ActivityDetailedChat = () => {
     stopHubConnection,
     addComment,
     selectedActivity,
-    hubConnection,
     deleteComment
   } = rootStore.activityStore;
   const { user } = rootStore.userStore;

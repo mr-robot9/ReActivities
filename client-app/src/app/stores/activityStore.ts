@@ -345,7 +345,7 @@ export default class ActivityStore {
       await ActivityService.deleteComment(this.selectedActivity!.id, commentId);
       runInAction(() => {
         this.selectedActivity!.comments = this.selectedActivity!.comments.filter(
-          c => c.id != commentId
+          c => c.id !== commentId
         );
       });
     } catch (error) {
