@@ -2,7 +2,7 @@ import { observable, computed, runInAction, action } from 'mobx';
 import { IUser, IUserFormValues } from '../models/interfaces/IUser';
 import { UserService } from '../api/agent';
 import { RootStore } from './rootStore';
-import { history } from '../..';
+import { history } from '../../index';
 
 export default class UserStore {
   rootStore: RootStore;
@@ -22,6 +22,7 @@ export default class UserStore {
       const user = await UserService.register(values);
 
       runInAction(() => {
+        this.user = user;
         this.rootStore.commonStore.setToken(user.token);
         this.rootStore.modalStore.closeModal();
       });
